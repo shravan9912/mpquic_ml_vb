@@ -14,11 +14,11 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/integrationtests/tools/testserver"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/utils"
+	"github.com/shravan9912/mpquic_ml_vb/integrationtests/tools/testserver"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/internal/utils"
 
-	_ "github.com/shravan9912/mpquic_actor_critic_v1/integrationtests/tools/testlog"
+	_ "github.com/shravan9912/mpquic_ml_vb/integrationtests/tools/testlog"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

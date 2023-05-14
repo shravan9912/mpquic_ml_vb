@@ -3,7 +3,7 @@ package handshake
 import (
 	"bytes"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/crypto"
+	"github.com/shravan9912/mpquic_ml_vb/internal/crypto"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

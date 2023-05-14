@@ -4,12 +4,12 @@ import (
 	"bytes"
 	"math"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/ackhandler"
-	"github.com/shravan9912/mpquic_actor_critic_v1/congestion"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/handshake"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/mocks"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/wire"
+	"github.com/shravan9912/mpquic_ml_vb/ackhandler"
+	"github.com/shravan9912/mpquic_ml_vb/congestion"
+	"github.com/shravan9912/mpquic_ml_vb/internal/handshake"
+	"github.com/shravan9912/mpquic_ml_vb/internal/mocks"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/internal/wire"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -116,7 +116,7 @@ var _ = Describe("Packet packer", func() {
 		packer.cryptoSetup.(*mockCryptoSetup).encLevelSeal = protocol.EncryptionForwardSecure
 		f := &wire.StreamFrame{
 			StreamID: 5,
-			Data:     []byte("foobar"),
+			Data:     []byte("barbar"),
 		}
 		streamFramer.AddFrameForRetransmission(f)
 		p, err := packer.PackPacket(pth)
@@ -157,7 +157,7 @@ var _ = Describe("Packet packer", func() {
 	It("packs a ConnectionClose", func() {
 		ccf := wire.ConnectionCloseFrame{
 			ErrorCode:    0x1337,
-			ReasonPhrase: "foobar",
+			ReasonPhrase: "barbar",
 		}
 		p, err := packer.PackConnectionClose(&ccf, pth)
 		Expect(err).ToNot(HaveOccurred())
@@ -168,12 +168,12 @@ var _ = Describe("Packet packer", func() {
 	It("doesn't send any other frames when sending a ConnectionClose", func() {
 		ccf := wire.ConnectionCloseFrame{
 			ErrorCode:    0x1337,
-			ReasonPhrase: "foobar",
+			ReasonPhrase: "barbar",
 		}
 		packer.controlFrames = []wire.Frame{&wire.WindowUpdateFrame{StreamID: 37}}
 		streamFramer.AddFrameForRetransmission(&wire.StreamFrame{
 			StreamID: 5,
-			Data:     []byte("foobar"),
+			Data:     []byte("barbar"),
 		})
 		p, err := packer.PackConnectionClose(&ccf, pth)
 		Expect(err).ToNot(HaveOccurred())
@@ -354,7 +354,7 @@ var _ = Describe("Packet packer", func() {
 			f2 := &wire.StreamFrame{
 				StreamID: 5,
 				Offset:   1,
-				Data:     []byte("foobar"),
+				Data:     []byte("barbar"),
 			}
 			streamFramer.AddFrameForRetransmission(f1)
 			streamFramer.AddFrameForRetransmission(f2)
@@ -495,7 +495,7 @@ var _ = Describe("Packet packer", func() {
 			packer.cryptoSetup.(*mockCryptoSetup).encLevelSeal = protocol.EncryptionUnencrypted
 			f := &wire.StreamFrame{
 				StreamID: 3,
-				Data:     []byte("foobar"),
+				Data:     []byte("barbar"),
 			}
 			streamFramer.AddFrameForRetransmission(f)
 			p, err := packer.PackPacket(pth)
@@ -508,7 +508,7 @@ var _ = Describe("Packet packer", func() {
 			packer.cryptoSetup.(*mockCryptoSetup).encLevelSeal = protocol.EncryptionSecure
 			f := &wire.StreamFrame{
 				StreamID: 5,
-				Data:     []byte("foobar"),
+				Data:     []byte("barbar"),
 			}
 			streamFramer.AddFrameForRetransmission(f)
 			p, err := packer.PackPacket(pth)
@@ -521,7 +521,7 @@ var _ = Describe("Packet packer", func() {
 			packer.cryptoSetup.(*mockCryptoSetup).encLevelSeal = protocol.EncryptionSecure
 			f := &wire.StreamFrame{
 				StreamID: 5,
-				Data:     []byte("foobar"),
+				Data:     []byte("barbar"),
 			}
 			streamFramer.AddFrameForRetransmission(f)
 			p, err := packer.PackPacket(pth)
@@ -531,28 +531,28 @@ var _ = Describe("Packet packer", func() {
 
 		It("sends unencrypted stream data on the crypto stream", func() {
 			packer.cryptoSetup.(*mockCryptoSetup).encLevelSealCrypto = protocol.EncryptionUnencrypted
-			cryptoStream.dataForWriting = []byte("foobar")
+			cryptoStream.dataForWriting = []byte("barbar")
 			p, err := packer.PackPacket(pth)
 			Expect(err).ToNot(HaveOccurred())
 			Expect(p.encryptionLevel).To(Equal(protocol.EncryptionUnencrypted))
 			Expect(p.frames).To(HaveLen(1))
-			Expect(p.frames[0]).To(Equal(&wire.StreamFrame{StreamID: 1, Data: []byte("foobar")}))
+			Expect(p.frames[0]).To(Equal(&wire.StreamFrame{StreamID: 1, Data: []byte("barbar")}))
 		})
 
 		It("sends encrypted stream data on the crypto stream", func() {
 			packer.cryptoSetup.(*mockCryptoSetup).encLevelSealCrypto = protocol.EncryptionSecure
-			cryptoStream.dataForWriting = []byte("foobar")
+			cryptoStream.dataForWriting = []byte("barbar")
 			p, err := packer.PackPacket(pth)
 			Expect(err).ToNot(HaveOccurred())
 			Expect(p.encryptionLevel).To(Equal(protocol.EncryptionSecure))
 			Expect(p.frames).To(HaveLen(1))
-			Expect(p.frames[0]).To(Equal(&wire.StreamFrame{StreamID: 1, Data: []byte("foobar")}))
+			Expect(p.frames[0]).To(Equal(&wire.StreamFrame{StreamID: 1, Data: []byte("barbar")}))
 		})
 
 		It("does not pack stream frames if not allowed", func() {
 			packer.cryptoSetup.(*mockCryptoSetup).encLevelSeal = protocol.EncryptionUnencrypted
 			packer.QueueControlFrame(&wire.AckFrame{}, pth)
-			streamFramer.AddFrameForRetransmission(&wire.StreamFrame{StreamID: 3, Data: []byte("foobar")})
+			streamFramer.AddFrameForRetransmission(&wire.StreamFrame{StreamID: 3, Data: []byte("barbar")})
 			p, err := packer.PackPacket(pth)
 			Expect(err).ToNot(HaveOccurred())
 			Expect(p.frames).To(HaveLen(1))
@@ -592,7 +592,7 @@ var _ = Describe("Packet packer", func() {
 			streamFramer.blockedFrameQueue = []*wire.BlockedFrame{{StreamID: 0}}
 			f := &wire.StreamFrame{
 				StreamID: 5,
-				Data:     []byte("foobar"),
+				Data:     []byte("barbar"),
 			}
 			streamFramer.AddFrameForRetransmission(f)
 			_, err := packer.composeNextPacket(maxFrameSize, true, pth)
@@ -638,7 +638,7 @@ var _ = Describe("Packet packer", func() {
 		swf := &wire.StopWaitingFrame{LeastUnacked: 1}
 		sf := &wire.StreamFrame{
 			StreamID: 1,
-			Data:     []byte("foobar"),
+			Data:     []byte("barbar"),
 		}
 
 		BeforeEach(func() {

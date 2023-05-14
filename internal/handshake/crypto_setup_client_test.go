@@ -7,10 +7,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/crypto"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/utils"
-	"github.com/shravan9912/mpquic_actor_critic_v1/qerr"
+	"github.com/shravan9912/mpquic_ml_vb/internal/crypto"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/internal/utils"
+	"github.com/shravan9912/mpquic_ml_vb/qerr"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -158,7 +158,7 @@ var _ = Describe("Client Crypto Setup", func() {
 		})
 
 		It("passes the message on for parsing, and reads the source address token", func() {
-			stk := []byte("foobar")
+			stk := []byte("barbar")
 			tagMap[TagSTK] = stk
 			HandshakeMessage{Tag: TagREJ, Data: tagMap}.Write(&stream.dataToRead)
 			go cs.HandleCryptoStream()
@@ -474,7 +474,7 @@ var _ = Describe("Client Crypto Setup", func() {
 			cs.cryptoStream.(*mockStream).dataWritten.Reset()
 			firstCHLO := cs.lastSentCHLO
 			// send second CHLO
-			cs.sno = []byte("foobar")
+			cs.sno = []byte("barbar")
 			err = cs.sendCHLO()
 			Expect(err).ToNot(HaveOccurred())
 			Expect(cs.cryptoStream.(*mockStream).dataWritten.Bytes()).To(Equal(cs.lastSentCHLO))
@@ -519,7 +519,7 @@ var _ = Describe("Client Crypto Setup", func() {
 		})
 
 		It("includes the server config id, if available", func() {
-			id := []byte("foobar")
+			id := []byte("barbar")
 			cs.serverConfig = &serverConfigClient{ID: id}
 			tags, err := cs.getTags()
 			Expect(err).ToNot(HaveOccurred())
@@ -534,7 +534,7 @@ var _ = Describe("Client Crypto Setup", func() {
 		})
 
 		It("includes the server nonce, if available", func() {
-			cs.sno = []byte("foobar")
+			cs.sno = []byte("barbar")
 			tags, err := cs.getTags()
 			Expect(err).ToNot(HaveOccurred())
 			Expect(tags[TagSNO]).To(Equal(cs.sno))
@@ -691,15 +691,15 @@ var _ = Describe("Client Crypto Setup", func() {
 			It("is used initially", func() {
 				enc, sealer := cs.GetSealer()
 				Expect(enc).To(Equal(protocol.EncryptionUnencrypted))
-				d := sealer.Seal(nil, []byte("foobar"), 0, []byte{})
-				Expect(d).To(Equal([]byte("foobar unencrypted")))
+				d := sealer.Seal(nil, []byte("barbar"), 0, []byte{})
+				Expect(d).To(Equal([]byte("barbar unencrypted")))
 			})
 
 			It("is used for the crypto stream", func() {
 				enc, sealer := cs.GetSealerForCryptoStream()
 				Expect(enc).To(Equal(protocol.EncryptionUnencrypted))
-				d := sealer.Seal(nil, []byte("foobar"), 0, []byte{})
-				Expect(d).To(Equal([]byte("foobar unencrypted")))
+				d := sealer.Seal(nil, []byte("barbar"), 0, []byte{})
+				Expect(d).To(Equal([]byte("barbar unencrypted")))
 			})
 
 			It("is accepted initially", func() {
@@ -740,8 +740,8 @@ var _ = Describe("Client Crypto Setup", func() {
 				cs.receivedSecurePacket = false
 				enc, sealer := cs.GetSealer()
 				Expect(enc).To(Equal(protocol.EncryptionSecure))
-				d := sealer.Seal(nil, []byte("foobar"), 0, []byte{})
-				Expect(d).To(Equal([]byte("foobar  normal sec")))
+				d := sealer.Seal(nil, []byte("barbar"), 0, []byte{})
+				Expect(d).To(Equal([]byte("barbar  normal sec")))
 			})
 
 			It("is accepted", func() {
@@ -764,8 +764,8 @@ var _ = Describe("Client Crypto Setup", func() {
 				doCompleteREJ()
 				enc, sealer := cs.GetSealerForCryptoStream()
 				Expect(enc).To(Equal(protocol.EncryptionUnencrypted))
-				d := sealer.Seal(nil, []byte("foobar"), 0, []byte{})
-				Expect(d).To(Equal([]byte("foobar unencrypted")))
+				d := sealer.Seal(nil, []byte("barbar"), 0, []byte{})
+				Expect(d).To(Equal([]byte("barbar unencrypted")))
 			})
 		})
 
@@ -777,16 +777,16 @@ var _ = Describe("Client Crypto Setup", func() {
 				Expect(enc).To(Equal(protocol.EncryptionForwardSecure))
 				enc, sealer := cs.GetSealer()
 				Expect(enc).To(Equal(protocol.EncryptionForwardSecure))
-				d := sealer.Seal(nil, []byte("foobar"), 0, []byte{})
-				Expect(d).To(Equal([]byte("foobar forward sec")))
+				d := sealer.Seal(nil, []byte("barbar"), 0, []byte{})
+				Expect(d).To(Equal([]byte("barbar forward sec")))
 			})
 
 			It("is not used for the crypto stream", func() {
 				doSHLO()
 				enc, sealer := cs.GetSealerForCryptoStream()
 				Expect(enc).To(Equal(protocol.EncryptionUnencrypted))
-				d := sealer.Seal(nil, []byte("foobar"), 0, []byte{})
-				Expect(d).To(Equal([]byte("foobar unencrypted")))
+				d := sealer.Seal(nil, []byte("barbar"), 0, []byte{})
+				Expect(d).To(Equal([]byte("barbar unencrypted")))
 			})
 		})
 
@@ -794,16 +794,16 @@ var _ = Describe("Client Crypto Setup", func() {
 			It("forces null encryption", func() {
 				sealer, err := cs.GetSealerWithEncryptionLevel(protocol.EncryptionUnencrypted)
 				Expect(err).ToNot(HaveOccurred())
-				d := sealer.Seal(nil, []byte("foobar"), 0, []byte{})
-				Expect(d).To(Equal([]byte("foobar unencrypted")))
+				d := sealer.Seal(nil, []byte("barbar"), 0, []byte{})
+				Expect(d).To(Equal([]byte("barbar unencrypted")))
 			})
 
 			It("forces initial encryption", func() {
 				doCompleteREJ()
 				sealer, err := cs.GetSealerWithEncryptionLevel(protocol.EncryptionSecure)
 				Expect(err).ToNot(HaveOccurred())
-				d := sealer.Seal(nil, []byte("foobar"), 0, []byte{})
-				Expect(d).To(Equal([]byte("foobar  normal sec")))
+				d := sealer.Seal(nil, []byte("barbar"), 0, []byte{})
+				Expect(d).To(Equal([]byte("barbar  normal sec")))
 			})
 
 			It("errors of no AEAD for initial encryption is available", func() {
@@ -816,8 +816,8 @@ var _ = Describe("Client Crypto Setup", func() {
 				doSHLO()
 				sealer, err := cs.GetSealerWithEncryptionLevel(protocol.EncryptionForwardSecure)
 				Expect(err).ToNot(HaveOccurred())
-				d := sealer.Seal(nil, []byte("foobar"), 0, []byte{})
-				Expect(d).To(Equal([]byte("foobar forward sec")))
+				d := sealer.Seal(nil, []byte("barbar"), 0, []byte{})
+				Expect(d).To(Equal([]byte("barbar forward sec")))
 			})
 
 			It("errors of no AEAD for forward-secure encryption is available", func() {
@@ -837,14 +837,14 @@ var _ = Describe("Client Crypto Setup", func() {
 	Context("Diversification Nonces", func() {
 		It("sets a diversification nonce", func() {
 			go cs.HandleCryptoStream()
-			nonce := []byte("foobar")
+			nonce := []byte("barbar")
 			cs.SetDiversificationNonce(nonce)
 			Eventually(func() []byte { return cs.diversificationNonce }).Should(Equal(nonce))
 		})
 
 		It("doesn't do anything when called multiple times with the same nonce", func(done Done) {
 			go cs.HandleCryptoStream()
-			nonce := []byte("foobar")
+			nonce := []byte("barbar")
 			cs.SetDiversificationNonce(nonce)
 			cs.SetDiversificationNonce(nonce)
 			Eventually(func() []byte { return cs.diversificationNonce }).Should(Equal(nonce))
@@ -857,7 +857,7 @@ var _ = Describe("Client Crypto Setup", func() {
 				err = cs.HandleCryptoStream()
 			}()
 
-			nonce1 := []byte("foobar")
+			nonce1 := []byte("barbar")
 			nonce2 := []byte("raboof")
 			cs.SetDiversificationNonce(nonce1)
 			cs.SetDiversificationNonce(nonce2)

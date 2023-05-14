@@ -1,8 +1,8 @@
 package ackhandler
 
 import (
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/wire"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/internal/wire"
 )
 
 // This stopWaitingManager is not supposed to satisfy the StopWaitingManager interface, which is a remnant of the legacy AckHandler, and should be remove once we drop support for QUIC 33

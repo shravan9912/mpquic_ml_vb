@@ -56,11 +56,11 @@ var _ = Describe("NullAEAD using FNV128a", func() {
 
 	It("seals in-place", func() {
 		buf := make([]byte, 6, 6+8)
-		copy(buf, []byte("foobar"))
+		copy(buf, []byte("barbar"))
 		res := aead.Seal(buf[0:0], buf, 0, nil)
 		// buf = buf[:8+6]
-		Expect(buf[:6]).To(Equal([]byte("foobar")))
-		// Expect(res[:6]).To(Equal([]byte("foobar")))
+		Expect(buf[:6]).To(Equal([]byte("barbar")))
+		// Expect(res[:6]).To(Equal([]byte("barbar")))
 		Expect(buf[0 : 6+8]).To(Equal(res))
 	})
 })

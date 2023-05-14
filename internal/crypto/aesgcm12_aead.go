@@ -7,7 +7,7 @@ import (
 
 	"github.com/lucas-clemente/aes12"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
 )
 
 type aeadAESGCM12 struct {

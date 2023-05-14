@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
 )
 
 func (sch *scheduler) logTrainingData(s *session, selectedPath *path, trainingFile string) {

@@ -11,7 +11,7 @@ import (
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/hpack"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -119,26 +119,26 @@ var _ = Describe("Response Writer", func() {
 	})
 
 	It("writes data", func() {
-		n, err := w.Write([]byte("foobar"))
+		n, err := w.Write([]byte("barbar"))
 		Expect(n).To(Equal(6))
 		Expect(err).ToNot(HaveOccurred())
 		// Should have written 200 on the header stream
 		fields := decodeHeaderFields()
 		Expect(fields).To(HaveKeyWithValue(":status", []string{"200"}))
-		// And foobar on the data stream
-		Expect(dataStream.dataWritten.Bytes()).To(Equal([]byte("foobar")))
+		// And barbar on the data stream
+		Expect(dataStream.dataWritten.Bytes()).To(Equal([]byte("barbar")))
 	})
 
 	It("writes data after WriteHeader is called", func() {
 		w.WriteHeader(http.StatusTeapot)
-		n, err := w.Write([]byte("foobar"))
+		n, err := w.Write([]byte("barbar"))
 		Expect(n).To(Equal(6))
 		Expect(err).ToNot(HaveOccurred())
 		// Should have written 418 on the header stream
 		fields := decodeHeaderFields()
 		Expect(fields).To(HaveKeyWithValue(":status", []string{"418"}))
-		// And foobar on the data stream
-		Expect(dataStream.dataWritten.Bytes()).To(Equal([]byte("foobar")))
+		// And barbar on the data stream
+		Expect(dataStream.dataWritten.Bytes()).To(Equal([]byte("barbar")))
 	})
 
 	It("does not WriteHeader() twice", func() {
@@ -151,7 +151,7 @@ var _ = Describe("Response Writer", func() {
 
 	It("doesn't allow writes if the status code doesn't allow a body", func() {
 		w.WriteHeader(304)
-		n, err := w.Write([]byte("foobar"))
+		n, err := w.Write([]byte("barbar"))
 		Expect(n).To(BeZero())
 		Expect(err).To(MatchError(http.ErrBodyNotAllowed))
 		Expect(dataStream.dataWritten.Bytes()).To(HaveLen(0))

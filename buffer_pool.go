@@ -3,7 +3,7 @@ package quic
 import (
 	"sync"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
 )
 
 var bufferPool sync.Pool

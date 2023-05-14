@@ -3,8 +3,8 @@ package congestion
 import (
 	"time"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/utils"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/internal/utils"
 )
 
 // PrrSender implements the Proportional Rate Reduction (PRR) per RFC 6937

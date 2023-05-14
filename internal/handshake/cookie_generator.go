@@ -6,7 +6,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/crypto"
+	"github.com/shravan9912/mpquic_ml_vb/internal/crypto"
 )
 
 const (

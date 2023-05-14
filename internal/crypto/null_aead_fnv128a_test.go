@@ -1,7 +1,7 @@
 package crypto
 
 import (
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -40,11 +40,11 @@ var _ = Describe("NullAEAD using FNV128a", func() {
 
 	It("seals in-place", func() {
 		buf := make([]byte, 6, 12+6)
-		copy(buf, []byte("foobar"))
+		copy(buf, []byte("barbar"))
 		res := aeadServer.Seal(buf[0:0], buf, 0, nil)
 		buf = buf[:12+6]
-		Expect(buf[12:]).To(Equal([]byte("foobar")))
-		Expect(res[12:]).To(Equal([]byte("foobar")))
+		Expect(buf[12:]).To(Equal([]byte("barbar")))
+		Expect(res[12:]).To(Equal([]byte("barbar")))
 	})
 
 	It("fails", func() {

@@ -3,8 +3,8 @@ package wire
 import (
 	"bytes"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
-	"github.com/shravan9912/mpquic_actor_critic_v1/qerr"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/qerr"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -24,7 +24,7 @@ var _ = Describe("GoawayFrame", func() {
 				Expect(frame).To(Equal(&GoawayFrame{
 					ErrorCode:      0x1337,
 					LastGoodStream: 0x1234,
-					ReasonPhrase:   "foo",
+					ReasonPhrase:   "bar",
 				}))
 				Expect(err).ToNot(HaveOccurred())
 				Expect(b.Len()).To(BeZero())
@@ -58,7 +58,7 @@ var _ = Describe("GoawayFrame", func() {
 				Expect(frame).To(Equal(&GoawayFrame{
 					ErrorCode:      0x1337,
 					LastGoodStream: 0x1234,
-					ReasonPhrase:   "foo",
+					ReasonPhrase:   "bar",
 				}))
 				Expect(err).ToNot(HaveOccurred())
 				Expect(b.Len()).To(BeZero())
@@ -98,7 +98,7 @@ var _ = Describe("GoawayFrame", func() {
 				frame := GoawayFrame{
 					ErrorCode:      0x1337,
 					LastGoodStream: 2,
-					ReasonPhrase:   "foo",
+					ReasonPhrase:   "bar",
 				}
 				err := frame.Write(b, versionLittleEndian)
 				Expect(err).ToNot(HaveOccurred())
@@ -117,7 +117,7 @@ var _ = Describe("GoawayFrame", func() {
 				frame := GoawayFrame{
 					ErrorCode:      0x1337,
 					LastGoodStream: 2,
-					ReasonPhrase:   "foo",
+					ReasonPhrase:   "bar",
 				}
 				err := frame.Write(b, versionBigEndian)
 				Expect(err).ToNot(HaveOccurred())
@@ -132,7 +132,7 @@ var _ = Describe("GoawayFrame", func() {
 
 		It("has the correct min length", func() {
 			frame := GoawayFrame{
-				ReasonPhrase: "foo",
+				ReasonPhrase: "bar",
 			}
 			Expect(frame.MinLength(0)).To(Equal(protocol.ByteCount(14)))
 		})

@@ -2,13 +2,13 @@
 
 **Inspired and based on: https://multipath-quic.org/2017/12/09/artifacts-available.html**
 
-mpquic_actor_critic_v1 is a multipath implementation of the [quic-go](https://github.com/lucas-clemente/quic-go) protocol
+mpquic_ml_vb is a multipath implementation of the [quic-go](https://github.com/lucas-clemente/quic-go) protocol
 
 ## Roadmap
 - Implement different Machine Learning based Schedulers
 - _DONE_: Make this completely standalone, so that anyone can import this library without manual
 
-This version of mpquic_actor_critic_v1 is not dependent on quic-go, and can be installed as a standalone package
+This version of mpquic_ml_vb is not dependent on quic-go, and can be installed as a standalone package
 
 ### Pre-Requisites
 
@@ -55,13 +55,13 @@ Running tests:
 
 ## Example Implementation
 
-An application that does File Transfer using mpquic_actor_critic_v1 has been shown at [MPQUIC-FTP](https://github.com/shravan9912/mpquic_ftp)
+An application that does File Transfer using mpquic_ml_vb has been shown at [MPQUIC-FTP](https://github.com/shravan9912/mpquic_ftp)
 
 In case of any issue accessing it, please reach out to repository owner
 
 ## Contributing
 
-We are always happy to welcome new contributors! We have a number of self-contained issues that are suitable for first-time contributors, they are tagged with [want-help](https://github.com/shravan9912/mpquic_actor_critic_v1/issues?q=is%3Aopen+is%3Aissue+label%3Awant-help). If you have any questions, please feel free to reach out by opening an issue or leaving a comment.
+We are always happy to welcome new contributors! We have a number of self-contained issues that are suitable for first-time contributors, they are tagged with [want-help](https://github.com/shravan9912/mpquic_ml_vb/issues?q=is%3Aopen+is%3Aissue+label%3Awant-help). If you have any questions, please feel free to reach out by opening an issue or leaving a comment.
 
 ## Acknowledgment
-- Thanks to [Qdeconinck](https://github.com/qdeconinck/mpquic_actor_critic_v1) for starting this amazing work
+- Thanks to [Qdeconinck](https://github.com/qdeconinck/mpquic_ml_vb) for starting this amazing work

@@ -9,10 +9,10 @@ import (
 	"os"
 	"time"
 
-	quic "github.com/shravan9912/mpquic_actor_critic_v1"
-	"github.com/shravan9912/mpquic_actor_critic_v1/h2quic"
-	"github.com/shravan9912/mpquic_actor_critic_v1/integrationtests/tools/testserver"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
+	quic "github.com/shravan9912/mpquic_ml_vb"
+	"github.com/shravan9912/mpquic_ml_vb/h2quic"
+	"github.com/shravan9912/mpquic_ml_vb/integrationtests/tools/testserver"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

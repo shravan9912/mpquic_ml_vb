@@ -10,8 +10,8 @@ import (
 var _ = Describe("Quic error", func() {
 	Context("QuicError", func() {
 		It("has a string representation", func() {
-			err := Error(DecryptionFailure, "foobar")
-			Expect(err.Error()).To(Equal("DecryptionFailure: foobar"))
+			err := Error(DecryptionFailure, "barbar")
+			Expect(err.Error()).To(Equal("DecryptionFailure: barbar"))
 		})
 	})
 
@@ -31,7 +31,7 @@ var _ = Describe("Quic error", func() {
 
 	Context("ToQuicError", func() {
 		It("leaves QuicError unchanged", func() {
-			err := Error(DecryptionFailure, "foo")
+			err := Error(DecryptionFailure, "bar")
 			Expect(ToQuicError(err)).To(Equal(err))
 		})
 

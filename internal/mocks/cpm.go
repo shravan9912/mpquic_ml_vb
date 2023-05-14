@@ -6,8 +6,8 @@ package mocks
 import (
 	time "time"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/handshake"
-	protocol "github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/internal/handshake"
+	protocol "github.com/shravan9912/mpquic_ml_vb/internal/protocol"
 	gomock "github.com/golang/mock/gomock"
 )
 

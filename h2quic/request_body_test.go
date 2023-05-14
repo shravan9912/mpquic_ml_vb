@@ -13,7 +13,7 @@ var _ = Describe("Request body", func() {
 
 	BeforeEach(func() {
 		stream = &mockStream{}
-		stream.dataToRead.Write([]byte("foobar")) // provides data to be read
+		stream.dataToRead.Write([]byte("barbar")) // provides data to be read
 		rb = newRequestBody(stream)
 	})
 
@@ -21,7 +21,7 @@ var _ = Describe("Request body", func() {
 		b := make([]byte, 10)
 		n, _ := stream.Read(b)
 		Expect(n).To(Equal(6))
-		Expect(b[0:6]).To(Equal([]byte("foobar")))
+		Expect(b[0:6]).To(Equal([]byte("barbar")))
 	})
 
 	It("saves if the stream was read from", func() {

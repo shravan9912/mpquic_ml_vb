@@ -3,10 +3,10 @@ package quic
 import (
 	"bytes"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/crypto"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/wire"
-	"github.com/shravan9912/mpquic_actor_critic_v1/qerr"
+	"github.com/shravan9912/mpquic_ml_vb/internal/crypto"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/internal/wire"
+	"github.com/shravan9912/mpquic_ml_vb/qerr"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -53,7 +53,7 @@ var _ = Describe("Packet unpacker", func() {
 	}
 
 	It("does not read read a private flag for QUIC Version >= 34", func() {
-		f := &wire.ConnectionCloseFrame{ReasonPhrase: "foo"}
+		f := &wire.ConnectionCloseFrame{ReasonPhrase: "bar"}
 		err := f.Write(buf, 0)
 		Expect(err).ToNot(HaveOccurred())
 		setData(buf.Bytes())
@@ -63,7 +63,7 @@ var _ = Describe("Packet unpacker", func() {
 	})
 
 	It("saves the encryption level", func() {
-		f := &wire.ConnectionCloseFrame{ReasonPhrase: "foo"}
+		f := &wire.ConnectionCloseFrame{ReasonPhrase: "bar"}
 		err := f.Write(buf, 0)
 		Expect(err).ToNot(HaveOccurred())
 		setData(buf.Bytes())
@@ -131,7 +131,7 @@ var _ = Describe("Packet unpacker", func() {
 	})
 
 	It("unpacks CONNECTION_CLOSE frames", func() {
-		f := &wire.ConnectionCloseFrame{ReasonPhrase: "foo"}
+		f := &wire.ConnectionCloseFrame{ReasonPhrase: "bar"}
 		err := f.Write(buf, 0)
 		Expect(err).ToNot(HaveOccurred())
 		setData(buf.Bytes())
@@ -154,7 +154,7 @@ var _ = Describe("Packet unpacker", func() {
 			&wire.GoawayFrame{
 				ErrorCode:      1,
 				LastGoodStream: 2,
-				ReasonPhrase:   "foo",
+				ReasonPhrase:   "bar",
 			},
 		}))
 	})
@@ -226,7 +226,7 @@ var _ = Describe("Packet unpacker", func() {
 			unpacker.aead.(*mockAEAD).encLevelOpen = protocol.EncryptionUnencrypted
 			f := &wire.StreamFrame{
 				StreamID: 1,
-				Data:     []byte("foobar"),
+				Data:     []byte("barbar"),
 			}
 			err := f.Write(buf, 0)
 			Expect(err).ToNot(HaveOccurred())
@@ -240,7 +240,7 @@ var _ = Describe("Packet unpacker", func() {
 			unpacker.aead.(*mockAEAD).encLevelOpen = protocol.EncryptionSecure
 			f := &wire.StreamFrame{
 				StreamID: 1,
-				Data:     []byte("foobar"),
+				Data:     []byte("barbar"),
 			}
 			err := f.Write(buf, 0)
 			Expect(err).ToNot(HaveOccurred())
@@ -254,7 +254,7 @@ var _ = Describe("Packet unpacker", func() {
 			unpacker.aead.(*mockAEAD).encLevelOpen = protocol.EncryptionUnencrypted
 			f := &wire.StreamFrame{
 				StreamID: 3,
-				Data:     []byte("foobar"),
+				Data:     []byte("barbar"),
 			}
 			err := f.Write(buf, 0)
 			Expect(err).ToNot(HaveOccurred())

@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"time"
 
-	quic "github.com/shravan9912/mpquic_actor_critic_v1"
+	quic "github.com/shravan9912/mpquic_ml_vb"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -85,7 +85,7 @@ var _ = Describe("RoundTripper", func() {
 		})
 
 		It("creates new clients", func() {
-			req, err := http.NewRequest("GET", "https://quic.clemente.io/foobar.html", nil)
+			req, err := http.NewRequest("GET", "https://quic.clemente.io/barbar.html", nil)
 			Expect(err).ToNot(HaveOccurred())
 			_, err = rt.RoundTrip(req)
 			Expect(err).To(MatchError(streamOpenErr))
@@ -118,7 +118,7 @@ var _ = Describe("RoundTripper", func() {
 		})
 
 		It("doesn't create new clients if RoundTripOpt.OnlyCachedConn is set", func() {
-			req, err := http.NewRequest("GET", "https://quic.clemente.io/foobar.html", nil)
+			req, err := http.NewRequest("GET", "https://quic.clemente.io/barbar.html", nil)
 			Expect(err).ToNot(HaveOccurred())
 			_, err = rt.RoundTripOpt(req, RoundTripOpt{OnlyCachedConn: true})
 			Expect(err).To(MatchError(ErrNoCachedConn))
@@ -167,22 +167,22 @@ var _ = Describe("RoundTripper", func() {
 		})
 
 		It("rejects requests with invalid header name fields", func() {
-			req1.Header.Add("foobär", "value")
+			req1.Header.Add("barbär", "value")
 			_, err := rt.RoundTrip(req1)
-			Expect(err).To(MatchError("quic: invalid http header field name \"foobär\""))
+			Expect(err).To(MatchError("quic: invalid http header field name \"barbär\""))
 		})
 
 		It("rejects requests with invalid header name values", func() {
-			req1.Header.Add("foo", string([]byte{0x7}))
+			req1.Header.Add("bar", string([]byte{0x7}))
 			_, err := rt.RoundTrip(req1)
 			Expect(err.Error()).To(ContainSubstring("quic: invalid http header field value"))
 		})
 
 		It("rejects requests with an invalid request method", func() {
-			req1.Method = "foobär"
+			req1.Method = "barbär"
 			req1.Body = &mockBody{}
 			_, err := rt.RoundTrip(req1)
-			Expect(err).To(MatchError("quic: invalid method \"foobär\""))
+			Expect(err).To(MatchError("quic: invalid method \"barbär\""))
 			Expect(req1.Body.(*mockBody).closed).To(BeTrue())
 		})
 	})
@@ -191,7 +191,7 @@ var _ = Describe("RoundTripper", func() {
 		It("closes", func() {
 			rt.clients = make(map[string]roundTripCloser)
 			cl := &mockClient{}
-			rt.clients["foo.bar"] = cl
+			rt.clients["bar.bar"] = cl
 			err := rt.Close()
 			Expect(err).ToNot(HaveOccurred())
 			Expect(len(rt.clients)).To(BeZero())

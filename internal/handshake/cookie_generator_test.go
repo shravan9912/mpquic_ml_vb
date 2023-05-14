@@ -49,14 +49,14 @@ var _ = Describe("Cookie Generator", func() {
 	})
 
 	It("rejects tokens that cannot be decoded", func() {
-		token, err := cookieGen.cookieSource.NewToken([]byte("foobar"))
+		token, err := cookieGen.cookieSource.NewToken([]byte("barbar"))
 		Expect(err).ToNot(HaveOccurred())
 		_, err = cookieGen.DecodeToken(token)
 		Expect(err).To(HaveOccurred())
 	})
 
 	It("rejects tokens that can be decoded, but have additional payload", func() {
-		t, err := asn1.Marshal(token{Data: []byte("foobar")})
+		t, err := asn1.Marshal(token{Data: []byte("barbar")})
 		Expect(err).ToNot(HaveOccurred())
 		t = append(t, []byte("rest")...)
 		enc, err := cookieGen.cookieSource.NewToken(t)

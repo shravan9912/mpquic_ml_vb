@@ -61,21 +61,21 @@ var _ = Describe("Connection", func() {
 	})
 
 	It("writes", func() {
-		err := c.Write([]byte("foobar"))
+		err := c.Write([]byte("barbar"))
 		Expect(err).ToNot(HaveOccurred())
-		Expect(packetConn.dataWritten.Bytes()).To(Equal([]byte("foobar")))
+		Expect(packetConn.dataWritten.Bytes()).To(Equal([]byte("barbar")))
 		Expect(packetConn.dataWrittenTo.String()).To(Equal("192.168.100.200:1337"))
 	})
 
 	It("reads", func() {
-		packetConn.dataToRead = []byte("foo")
+		packetConn.dataToRead = []byte("bar")
 		packetConn.dataReadFrom = &net.UDPAddr{IP: net.IPv4(127, 0, 0, 1), Port: 1336}
 		p := make([]byte, 10)
 		n, raddr, err := c.Read(p)
 		Expect(err).ToNot(HaveOccurred())
 		Expect(raddr.String()).To(Equal("127.0.0.1:1336"))
 		Expect(n).To(Equal(3))
-		Expect(p[0:3]).To(Equal([]byte("foo")))
+		Expect(p[0:3]).To(Equal([]byte("bar")))
 	})
 
 	It("gets the remote address", func() {

@@ -11,8 +11,8 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/testdata"
-	"github.com/shravan9912/mpquic_actor_critic_v1/qerr"
+	"github.com/shravan9912/mpquic_ml_vb/internal/testdata"
+	"github.com/shravan9912/mpquic_ml_vb/qerr"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -44,7 +44,7 @@ var _ = Describe("Cert Manager", func() {
 	})
 
 	It("errors when given invalid data", func() {
-		err := cm.SetData([]byte("foobar"))
+		err := cm.SetData([]byte("barbar"))
 		Expect(err).To(MatchError(qerr.Error(qerr.InvalidCryptoMessageParameter, "Certificate data invalid")))
 	})
 

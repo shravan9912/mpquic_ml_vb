@@ -8,10 +8,10 @@ import (
 	"math/rand"
 	"net"
 
-	quic "github.com/shravan9912/mpquic_actor_critic_v1"
-	_ "github.com/shravan9912/mpquic_actor_critic_v1/integrationtests/tools/testlog"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/testdata"
+	quic "github.com/shravan9912/mpquic_ml_vb"
+	_ "github.com/shravan9912/mpquic_ml_vb/integrationtests/tools/testlog"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/internal/testdata"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )

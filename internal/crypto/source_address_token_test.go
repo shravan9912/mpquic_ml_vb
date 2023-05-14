@@ -20,11 +20,11 @@ var _ = Describe("Source Address Tokens", func() {
 		})
 
 		It("serializes", func() {
-			token, err := source.NewToken([]byte("foobar"))
+			token, err := source.NewToken([]byte("barbar"))
 			Expect(err).ToNot(HaveOccurred())
 			data, err := source.DecodeToken(token)
 			Expect(err).ToNot(HaveOccurred())
-			Expect(data).To(Equal([]byte("foobar")))
+			Expect(data).To(Equal([]byte("barbar")))
 		})
 
 		It("rejects invalid tokens", func() {

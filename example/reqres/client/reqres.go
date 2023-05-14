@@ -17,8 +17,8 @@ import (
 	"sync"
 	"time"
 
-	quic "github.com/shravan9912/mpquic_actor_critic_v1"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/utils"
+	quic "github.com/shravan9912/mpquic_ml_vb"
+	"github.com/shravan9912/mpquic_ml_vb/internal/utils"
 )
 
 const (

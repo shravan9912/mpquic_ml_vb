@@ -11,12 +11,12 @@ import (
 	"log"
 	"math/big"
 
-	quic "github.com/shravan9912/mpquic_actor_critic_v1"
+	quic "github.com/shravan9912/mpquic_ml_vb"
 )
 
 const addr = "localhost:4242"
 
-const message = "foobar"
+const message = "barbar"
 
 // We start a server echoing data on the first stream the client opens,
 // then connect with a client, send the message, and wait for its receipt.

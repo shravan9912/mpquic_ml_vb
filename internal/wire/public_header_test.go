@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"encoding/binary"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/utils"
-	"github.com/shravan9912/mpquic_actor_critic_v1/qerr"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/internal/utils"
+	"github.com/shravan9912/mpquic_ml_vb/qerr"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -487,7 +487,7 @@ var _ = Describe("Public Header", func() {
 
 			It("works with diversification nonce", func() {
 				hdr := PublicHeader{
-					DiversificationNonce: []byte("foo"),
+					DiversificationNonce: []byte("bar"),
 					PacketNumberLen:      protocol.PacketNumberLen1,
 				}
 				length, err := hdr.GetLength(protocol.PerspectiveServer)

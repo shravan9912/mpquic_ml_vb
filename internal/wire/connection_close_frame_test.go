@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"strings"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
-	"github.com/shravan9912/mpquic_actor_critic_v1/qerr"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/qerr"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -120,7 +120,7 @@ var _ = Describe("ConnectionCloseFrame", func() {
 				b := &bytes.Buffer{}
 				frame := &ConnectionCloseFrame{
 					ErrorCode:    0xdeadbeef,
-					ReasonPhrase: "foobar",
+					ReasonPhrase: "barbar",
 				}
 				err := frame.Write(b, versionLittleEndian)
 				Expect(err).ToNot(HaveOccurred())
@@ -152,7 +152,7 @@ var _ = Describe("ConnectionCloseFrame", func() {
 				b := &bytes.Buffer{}
 				frame := &ConnectionCloseFrame{
 					ErrorCode:    0xdeadbeef,
-					ReasonPhrase: "foobar",
+					ReasonPhrase: "barbar",
 				}
 				err := frame.Write(b, versionBigEndian)
 				Expect(err).ToNot(HaveOccurred())
@@ -180,7 +180,7 @@ var _ = Describe("ConnectionCloseFrame", func() {
 			b := &bytes.Buffer{}
 			f := &ConnectionCloseFrame{
 				ErrorCode:    0xdeadbeef,
-				ReasonPhrase: "foobar",
+				ReasonPhrase: "barbar",
 			}
 			err := f.Write(b, protocol.VersionWhatever)
 			Expect(err).ToNot(HaveOccurred())

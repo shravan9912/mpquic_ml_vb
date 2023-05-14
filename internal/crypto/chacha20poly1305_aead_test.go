@@ -32,26 +32,26 @@ var _ = Describe("Chacha20poly1305", func() {
 	})
 
 	It("seals and opens", func() {
-		b := alice.Seal(nil, []byte("foobar"), 42, []byte("aad"))
+		b := alice.Seal(nil, []byte("barbar"), 42, []byte("aad"))
 		text, err := bob.Open(nil, b, 42, []byte("aad"))
 		Expect(err).ToNot(HaveOccurred())
-		Expect(text).To(Equal([]byte("foobar")))
+		Expect(text).To(Equal([]byte("barbar")))
 	})
 
 	It("seals and opens reverse", func() {
-		b := bob.Seal(nil, []byte("foobar"), 42, []byte("aad"))
+		b := bob.Seal(nil, []byte("barbar"), 42, []byte("aad"))
 		text, err := alice.Open(nil, b, 42, []byte("aad"))
 		Expect(err).ToNot(HaveOccurred())
-		Expect(text).To(Equal([]byte("foobar")))
+		Expect(text).To(Equal([]byte("barbar")))
 	})
 
 	It("has the proper length", func() {
-		b := bob.Seal(nil, []byte("foobar"), 42, []byte("aad"))
+		b := bob.Seal(nil, []byte("barbar"), 42, []byte("aad"))
 		Expect(b).To(HaveLen(6 + 12))
 	})
 
 	It("fails with wrong aad", func() {
-		b := alice.Seal(nil, []byte("foobar"), 42, []byte("aad"))
+		b := alice.Seal(nil, []byte("barbar"), 42, []byte("aad"))
 		_, err := bob.Open(nil, b, 42, []byte("aad2"))
 		Expect(err).To(HaveOccurred())
 	})

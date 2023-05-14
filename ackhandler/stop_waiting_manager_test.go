@@ -1,7 +1,7 @@
 package ackhandler
 
 import (
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/wire"
+	"github.com/shravan9912/mpquic_ml_vb/internal/wire"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )

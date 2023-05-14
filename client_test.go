@@ -8,9 +8,9 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/wire"
-	"github.com/shravan9912/mpquic_actor_critic_v1/qerr"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/internal/wire"
+	"github.com/shravan9912/mpquic_ml_vb/qerr"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -218,10 +218,10 @@ var _ = Describe("Client", func() {
 			dialed := make(chan struct{})
 			go func() {
 				defer GinkgoRecover()
-				DialAddr("localhost:17890", &tls.Config{ServerName: "foobar"}, nil)
+				DialAddr("localhost:17890", &tls.Config{ServerName: "barbar"}, nil)
 				close(dialed)
 			}()
-			Eventually(hostnameChan).Should(Receive(Equal("foobar")))
+			Eventually(hostnameChan).Should(Receive(Equal("barbar")))
 			sess.Close(errors.New("peer doesn't reply"))
 			Eventually(dialed).Should(BeClosed())
 			close(done)

@@ -14,15 +14,15 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/ackhandler"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/crypto"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/handshake"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/mocks"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/mocks/mocks_fc"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/testdata"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/wire"
-	"github.com/shravan9912/mpquic_actor_critic_v1/qerr"
+	"github.com/shravan9912/mpquic_ml_vb/ackhandler"
+	"github.com/shravan9912/mpquic_ml_vb/internal/crypto"
+	"github.com/shravan9912/mpquic_ml_vb/internal/handshake"
+	"github.com/shravan9912/mpquic_ml_vb/internal/mocks"
+	"github.com/shravan9912/mpquic_ml_vb/internal/mocks/mocks_fc"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/internal/testdata"
+	"github.com/shravan9912/mpquic_ml_vb/internal/wire"
+	"github.com/shravan9912/mpquic_ml_vb/qerr"
 )
 
 type mockConnection struct {
@@ -450,7 +450,7 @@ var _ = Describe("Session", func() {
 			Expect(str).To(BeNil()) // make sure the stream is gone
 			err = sess.handleStreamFrame(&wire.StreamFrame{
 				StreamID: 5,
-				Data:     []byte("foobar"),
+				Data:     []byte("barbar"),
 			})
 			Expect(err).ToNot(HaveOccurred())
 		})
@@ -500,7 +500,7 @@ var _ = Describe("Session", func() {
 			Expect(err).ToNot(HaveOccurred())
 			sess.handleStreamFrame(&wire.StreamFrame{
 				StreamID: 5,
-				Data:     []byte("foobar"),
+				Data:     []byte("barbar"),
 			})
 			err = sess.handleRstStreamFrame(&wire.RstStreamFrame{
 				StreamID:   5,
@@ -691,11 +691,11 @@ var _ = Describe("Session", func() {
 		go sess.run()
 		str, _ := sess.GetOrOpenStream(5)
 		// XXX (QDC): adapted to multiple paths
-		err := sess.handleFrames([]wire.Frame{&wire.ConnectionCloseFrame{ErrorCode: 42, ReasonPhrase: "foobar"}}, sess.paths[0])
+		err := sess.handleFrames([]wire.Frame{&wire.ConnectionCloseFrame{ErrorCode: 42, ReasonPhrase: "barbar"}}, sess.paths[0])
 		Expect(err).NotTo(HaveOccurred())
 		Eventually(sess.Context().Done()).Should(BeClosed())
 		_, err = str.Read([]byte{0})
-		Expect(err).To(MatchError(qerr.Error(42, "foobar")))
+		Expect(err).To(MatchError(qerr.Error(42, "barbar")))
 		close(done)
 	})
 
@@ -1041,7 +1041,7 @@ var _ = Describe("Session", func() {
 
 			f := &wire.StreamFrame{
 				StreamID: 5,
-				Data:     []byte("foobar"),
+				Data:     []byte("barbar"),
 			}
 			sess.streamFramer.AddFrameForRetransmission(f)
 			_, err := sess.GetOrOpenStream(5)
@@ -1072,7 +1072,7 @@ var _ = Describe("Session", func() {
 
 		Context("for handshake packets", func() {
 			It("retransmits an unencrypted packet", func() {
-				sf := &wire.StreamFrame{StreamID: 1, Data: []byte("foobar")}
+				sf := &wire.StreamFrame{StreamID: 1, Data: []byte("barbar")}
 				sph.retransmissionQueue = []*ackhandler.Packet{{
 					Frames:          []wire.Frame{sf},
 					EncryptionLevel: protocol.EncryptionUnencrypted,
@@ -1090,7 +1090,7 @@ var _ = Describe("Session", func() {
 			})
 
 			It("retransmit a packet encrypted with the initial encryption", func() {
-				sf := &wire.StreamFrame{StreamID: 1, Data: []byte("foobar")}
+				sf := &wire.StreamFrame{StreamID: 1, Data: []byte("barbar")}
 				sph.retransmissionQueue = []*ackhandler.Packet{{
 					Frames:          []wire.Frame{sf},
 					EncryptionLevel: protocol.EncryptionSecure,
@@ -1107,7 +1107,7 @@ var _ = Describe("Session", func() {
 
 			It("doesn't retransmit handshake packets when the handshake is complete", func() {
 				sess.handshakeComplete = true
-				sf := &wire.StreamFrame{StreamID: 1, Data: []byte("foobar")}
+				sf := &wire.StreamFrame{StreamID: 1, Data: []byte("barbar")}
 				sph.retransmissionQueue = []*ackhandler.Packet{{
 					Frames:          []wire.Frame{sf},
 					EncryptionLevel: protocol.EncryptionSecure,
@@ -1122,7 +1122,7 @@ var _ = Describe("Session", func() {
 			It("sends a StreamFrame from a packet queued for retransmission", func() {
 				f := wire.StreamFrame{
 					StreamID: 0x5,
-					Data:     []byte("foobar1234567"),
+					Data:     []byte("barbar1234567"),
 				}
 				p := ackhandler.Packet{
 					PacketNumber:    0x1337,
@@ -1135,13 +1135,13 @@ var _ = Describe("Session", func() {
 				Expect(err).NotTo(HaveOccurred())
 				Expect(mconn.written).To(HaveLen(1))
 				Expect(sph.requestedStopWaiting).To(BeTrue())
-				Expect(mconn.written).To(Receive(ContainSubstring("foobar1234567")))
+				Expect(mconn.written).To(Receive(ContainSubstring("barbar1234567")))
 			})
 
 			It("sends a StreamFrame from a packet queued for retransmission", func() {
 				f1 := wire.StreamFrame{
 					StreamID: 0x5,
-					Data:     []byte("foobar"),
+					Data:     []byte("barbar"),
 				}
 				f2 := wire.StreamFrame{
 					StreamID: 0x7,
@@ -1163,7 +1163,7 @@ var _ = Describe("Session", func() {
 				Expect(err).NotTo(HaveOccurred())
 				Expect(mconn.written).To(HaveLen(1))
 				packet := <-mconn.written
-				Expect(packet).To(ContainSubstring("foobar"))
+				Expect(packet).To(ContainSubstring("barbar"))
 				Expect(packet).To(ContainSubstring("loremipsum"))
 			})
 
@@ -1265,7 +1265,7 @@ var _ = Describe("Session", func() {
 			PacketNumber: n,
 			Length:       1,
 			Frames: []wire.Frame{&wire.StreamFrame{
-				Data: []byte("foobar"),
+				Data: []byte("barbar"),
 			}},
 			EncryptionLevel: protocol.EncryptionForwardSecure,
 		})
@@ -1276,7 +1276,7 @@ var _ = Describe("Session", func() {
 		sess.paths[0].maybeResetTimer()
 		sess.scheduleSending()
 		Eventually(func() int { return len(mconn.written) }).ShouldNot(BeZero())
-		Expect(mconn.written).To(Receive(ContainSubstring("foobar")))
+		Expect(mconn.written).To(Receive(ContainSubstring("barbar")))
 	})
 
 	Context("scheduling sending", func() {
@@ -1289,7 +1289,7 @@ var _ = Describe("Session", func() {
 			s, err := sess.GetOrOpenStream(3)
 			Expect(err).NotTo(HaveOccurred())
 			go func() {
-				s.Write([]byte("foobar"))
+				s.Write([]byte("barbar"))
 				close(done)
 			}()
 			Eventually(sess.sendingScheduled).Should(Receive())
@@ -1316,8 +1316,8 @@ var _ = Describe("Session", func() {
 				Expect(err).NotTo(HaveOccurred())
 
 				// Put data directly into the streams
-				s1.(*stream).dataForWriting = []byte("foobar1")
-				s2.(*stream).dataForWriting = []byte("foobar2")
+				s1.(*stream).dataForWriting = []byte("barbar1")
+				s2.(*stream).dataForWriting = []byte("barbar2")
 
 				sess.scheduleSending()
 				go sess.run()
@@ -1325,8 +1325,8 @@ var _ = Describe("Session", func() {
 
 				Eventually(mconn.written).Should(HaveLen(1))
 				packet := <-mconn.written
-				Expect(packet).To(ContainSubstring("foobar1"))
-				Expect(packet).To(ContainSubstring("foobar2"))
+				Expect(packet).To(ContainSubstring("barbar1"))
+				Expect(packet).To(ContainSubstring("barbar2"))
 			})
 
 			It("sends out two big frames in two packets", func() {
@@ -1350,10 +1350,10 @@ var _ = Describe("Session", func() {
 				Expect(err).NotTo(HaveOccurred())
 				go sess.run()
 				defer sess.Close(nil)
-				_, err = s.Write([]byte("foobar1"))
+				_, err = s.Write([]byte("barbar1"))
 				Expect(err).NotTo(HaveOccurred())
 				Eventually(mconn.written).Should(HaveLen(1))
-				_, err = s.Write([]byte("foobar2"))
+				_, err = s.Write([]byte("barbar2"))
 				Expect(err).NotTo(HaveOccurred())
 				Eventually(mconn.written).Should(HaveLen(2))
 			})
@@ -1367,10 +1367,10 @@ var _ = Describe("Session", func() {
 				Expect(err).NotTo(HaveOccurred())
 				go sess.run()
 				defer sess.Close(nil)
-				_, err = s.Write([]byte("foobar1"))
+				_, err = s.Write([]byte("barbar1"))
 				Expect(err).NotTo(HaveOccurred())
 				Eventually(mconn.written).Should(HaveLen(1))
-				_, err = s.Write([]byte("foobar2"))
+				_, err = s.Write([]byte("barbar2"))
 				Expect(err).NotTo(HaveOccurred())
 
 				Eventually(mconn.written).Should(HaveLen(2))
@@ -1402,7 +1402,7 @@ var _ = Describe("Session", func() {
 				sess.handlePacket(&receivedPacket{
 					publicHeader: hdr,
 					remoteAddr:   &net.UDPAddr{IP: net.IPv4(127, 0, 0, 1), Port: 1234},
-					data:         []byte("foobar"),
+					data:         []byte("barbar"),
 				})
 			}
 		}
@@ -1786,7 +1786,7 @@ var _ = Describe("Client Session", func() {
 		It("passes the diversification nonce to the cryptoSetup", func() {
 			go sess.run()
 			hdr.PacketNumber = 5
-			hdr.DiversificationNonce = []byte("foobar")
+			hdr.DiversificationNonce = []byte("barbar")
 			err := sess.handlePacketImpl(&receivedPacket{publicHeader: hdr})
 			Expect(err).ToNot(HaveOccurred())
 			Eventually(func() []byte { return cryptoSetup.divNonce }).Should(Equal(hdr.DiversificationNonce))

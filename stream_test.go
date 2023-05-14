@@ -9,9 +9,9 @@ import (
 
 	"os"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/mocks/mocks_fc"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/wire"
+	"github.com/shravan9912/mpquic_ml_vb/internal/mocks/mocks_fc"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/internal/wire"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -235,7 +235,7 @@ var _ = Describe("Stream", func() {
 			mockFcm.EXPECT().AddBytesRead(streamID, protocol.ByteCount(4))
 			frame1 := wire.StreamFrame{
 				Offset: 0,
-				Data:   []byte("foob"),
+				Data:   []byte("barb"),
 			}
 			frame2 := wire.StreamFrame{
 				Offset: 2,
@@ -249,7 +249,7 @@ var _ = Describe("Stream", func() {
 			n, err := strWithTimeout.Read(b)
 			Expect(err).ToNot(HaveOccurred())
 			Expect(n).To(Equal(6))
-			Expect(b).To(Equal([]byte("foobar")))
+			Expect(b).To(Equal([]byte("barbar")))
 		})
 
 		It("calls onData", func() {
@@ -274,7 +274,7 @@ var _ = Describe("Stream", func() {
 
 			It("returns an error when Read is called after the deadline", func() {
 				mockFcm.EXPECT().UpdateHighestReceived(streamID, protocol.ByteCount(6)).AnyTimes()
-				f := &wire.StreamFrame{Data: []byte("foobar")}
+				f := &wire.StreamFrame{Data: []byte("barbar")}
 				err := str.AddStreamFrame(f)
 				Expect(err).ToNot(HaveOccurred())
 				str.SetReadDeadline(time.Now().Add(-time.Second))
@@ -333,7 +333,7 @@ var _ = Describe("Stream", func() {
 
 			It("sets a read deadline, when SetDeadline is called", func() {
 				mockFcm.EXPECT().UpdateHighestReceived(streamID, protocol.ByteCount(6)).AnyTimes()
-				f := &wire.StreamFrame{Data: []byte("foobar")}
+				f := &wire.StreamFrame{Data: []byte("barbar")}
 				err := str.AddStreamFrame(f)
 				Expect(err).ToNot(HaveOccurred())
 				str.SetDeadline(time.Now().Add(-time.Second))
@@ -582,7 +582,7 @@ var _ = Describe("Stream", func() {
 				done := make(chan struct{})
 				go func() {
 					defer GinkgoRecover()
-					n, err := strWithTimeout.Write([]byte("foobar"))
+					n, err := strWithTimeout.Write([]byte("barbar"))
 					Expect(n).To(BeZero())
 					Expect(err).To(MatchError(testErr))
 					close(done)
@@ -596,7 +596,7 @@ var _ = Describe("Stream", func() {
 				done := make(chan struct{})
 				go func() {
 					defer GinkgoRecover()
-					n, err := strWithTimeout.Write([]byte("foobar"))
+					n, err := strWithTimeout.Write([]byte("barbar"))
 					Expect(err).To(MatchError(testErr))
 					Expect(n).To(Equal(4))
 					close(done)
@@ -611,7 +611,7 @@ var _ = Describe("Stream", func() {
 				done := make(chan struct{})
 				str.writeOffset = 0x1000
 				go func() {
-					_, _ = strWithTimeout.Write([]byte("foobar"))
+					_, _ = strWithTimeout.Write([]byte("barbar"))
 					close(done)
 				}()
 				str.RegisterRemoteError(testErr)
@@ -650,7 +650,7 @@ var _ = Describe("Stream", func() {
 				done := make(chan struct{})
 				go func() {
 					defer GinkgoRecover()
-					n, err := strWithTimeout.Write([]byte("foobar"))
+					n, err := strWithTimeout.Write([]byte("barbar"))
 					Expect(n).To(BeZero())
 					Expect(err).To(MatchError(testErr))
 					close(done)
@@ -663,7 +663,7 @@ var _ = Describe("Stream", func() {
 
 			It("doesn't allow further writes", func() {
 				str.Reset(testErr)
-				n, err := strWithTimeout.Write([]byte("foobar"))
+				n, err := strWithTimeout.Write([]byte("barbar"))
 				Expect(n).To(BeZero())
 				Expect(err).To(MatchError(testErr))
 				Expect(str.getDataForWriting(6)).To(BeNil())
@@ -687,7 +687,7 @@ var _ = Describe("Stream", func() {
 			It("doesn't allow further reads", func() {
 				mockFcm.EXPECT().UpdateHighestReceived(streamID, protocol.ByteCount(6))
 				str.AddStreamFrame(&wire.StreamFrame{
-					Data: []byte("foobar"),
+					Data: []byte("barbar"),
 				})
 				str.Reset(testErr)
 				b := make([]byte, 6)
@@ -740,7 +740,7 @@ var _ = Describe("Stream", func() {
 			done := make(chan struct{})
 			go func() {
 				defer GinkgoRecover()
-				n, err := strWithTimeout.Write([]byte("foobar"))
+				n, err := strWithTimeout.Write([]byte("barbar"))
 				Expect(err).ToNot(HaveOccurred())
 				Expect(n).To(Equal(6))
 				close(done)
@@ -749,12 +749,12 @@ var _ = Describe("Stream", func() {
 				str.mutex.Lock()
 				defer str.mutex.Unlock()
 				return str.dataForWriting
-			}).Should(Equal([]byte("foobar")))
+			}).Should(Equal([]byte("barbar")))
 			Consistently(done).ShouldNot(BeClosed())
 			Expect(onDataCalled).To(BeTrue())
 			Expect(str.lenOfDataForWriting()).To(Equal(protocol.ByteCount(6)))
 			data := str.getDataForWriting(1000)
-			Expect(data).To(Equal([]byte("foobar")))
+			Expect(data).To(Equal([]byte("barbar")))
 			Expect(str.writeOffset).To(Equal(protocol.ByteCount(6)))
 			Expect(str.dataForWriting).To(BeNil())
 			Eventually(done).Should(BeClosed())
@@ -764,7 +764,7 @@ var _ = Describe("Stream", func() {
 			done := make(chan struct{})
 			go func() {
 				defer GinkgoRecover()
-				n, err := strWithTimeout.Write([]byte("foobar"))
+				n, err := strWithTimeout.Write([]byte("barbar"))
 				Expect(err).ToNot(HaveOccurred())
 				Expect(n).To(Equal(6))
 				close(done)
@@ -773,11 +773,11 @@ var _ = Describe("Stream", func() {
 				str.mutex.Lock()
 				defer str.mutex.Unlock()
 				return str.dataForWriting
-			}).Should(Equal([]byte("foobar")))
+			}).Should(Equal([]byte("barbar")))
 			Consistently(done).ShouldNot(BeClosed())
 			Expect(str.lenOfDataForWriting()).To(Equal(protocol.ByteCount(6)))
 			data := str.getDataForWriting(3)
-			Expect(data).To(Equal([]byte("foo")))
+			Expect(data).To(Equal([]byte("bar")))
 			Expect(str.writeOffset).To(Equal(protocol.ByteCount(3)))
 			Expect(str.dataForWriting).ToNot(BeNil())
 			Expect(str.lenOfDataForWriting()).To(Equal(protocol.ByteCount(3)))
@@ -794,7 +794,7 @@ var _ = Describe("Stream", func() {
 		})
 
 		It("copies the slice while writing", func() {
-			s := []byte("foo")
+			s := []byte("bar")
 			go func() {
 				defer GinkgoRecover()
 				n, err := strWithTimeout.Write(s)
@@ -803,7 +803,7 @@ var _ = Describe("Stream", func() {
 			}()
 			Eventually(func() protocol.ByteCount { return str.lenOfDataForWriting() }).ShouldNot(BeZero())
 			s[0] = 'v'
-			Expect(str.getDataForWriting(3)).To(Equal([]byte("foo")))
+			Expect(str.getDataForWriting(3)).To(Equal([]byte("bar")))
 		})
 
 		It("returns when given a nil input", func() {
@@ -821,7 +821,7 @@ var _ = Describe("Stream", func() {
 		Context("deadlines", func() {
 			It("returns an error when Write is called after the deadline", func() {
 				str.SetWriteDeadline(time.Now().Add(-time.Second))
-				n, err := strWithTimeout.Write([]byte("foobar"))
+				n, err := strWithTimeout.Write([]byte("barbar"))
 				Expect(err).To(MatchError(errDeadline))
 				Expect(n).To(BeZero())
 			})
@@ -829,7 +829,7 @@ var _ = Describe("Stream", func() {
 			It("unblocks after the deadline", func() {
 				deadline := time.Now().Add(scaleDuration(50 * time.Millisecond))
 				str.SetWriteDeadline(deadline)
-				n, err := strWithTimeout.Write([]byte("foobar"))
+				n, err := strWithTimeout.Write([]byte("barbar"))
 				Expect(err).To(MatchError(errDeadline))
 				Expect(n).To(BeZero())
 				Expect(time.Now()).To(BeTemporally("~", deadline, scaleDuration(20*time.Millisecond)))
@@ -847,7 +847,7 @@ var _ = Describe("Stream", func() {
 					Expect(time.Now()).To(BeTemporally("<", deadline1))
 				}()
 				runtime.Gosched()
-				n, err := strWithTimeout.Write([]byte("foobar"))
+				n, err := strWithTimeout.Write([]byte("barbar"))
 				Expect(err).To(MatchError(errDeadline))
 				Expect(n).To(BeZero())
 				Expect(time.Now()).To(BeTemporally("~", deadline2, scaleDuration(20*time.Millisecond)))
@@ -865,14 +865,14 @@ var _ = Describe("Stream", func() {
 				}()
 				str.SetWriteDeadline(deadline1)
 				runtime.Gosched()
-				_, err := strWithTimeout.Write([]byte("foobar"))
+				_, err := strWithTimeout.Write([]byte("barbar"))
 				Expect(err).To(MatchError(errDeadline))
 				Expect(time.Now()).To(BeTemporally("~", deadline2, scaleDuration(20*time.Millisecond)))
 			})
 
 			It("sets a read deadline, when SetDeadline is called", func() {
 				str.SetDeadline(time.Now().Add(-time.Second))
-				n, err := strWithTimeout.Write([]byte("foobar"))
+				n, err := strWithTimeout.Write([]byte("barbar"))
 				Expect(err).To(MatchError(errDeadline))
 				Expect(n).To(BeZero())
 			})
@@ -886,7 +886,7 @@ var _ = Describe("Stream", func() {
 
 			It("doesn't allow writes after it has been closed", func() {
 				str.Close()
-				_, err := strWithTimeout.Write([]byte("foobar"))
+				_, err := strWithTimeout.Write([]byte("barbar"))
 				Expect(err).To(MatchError("write on closed stream 1337"))
 			})
 
@@ -896,7 +896,7 @@ var _ = Describe("Stream", func() {
 			})
 
 			It("does not allow FIN when there's still data", func() {
-				str.dataForWriting = []byte("foobar")
+				str.dataForWriting = []byte("barbar")
 				str.Close()
 				Expect(str.shouldSendFin()).To(BeFalse())
 			})
@@ -923,7 +923,7 @@ var _ = Describe("Stream", func() {
 
 			It("returns errors when the stream is cancelled", func() {
 				str.Cancel(testErr)
-				n, err := strWithTimeout.Write([]byte("foo"))
+				n, err := strWithTimeout.Write([]byte("bar"))
 				Expect(n).To(BeZero())
 				Expect(err).To(MatchError(testErr))
 			})
@@ -931,7 +931,7 @@ var _ = Describe("Stream", func() {
 			It("doesn't get data for writing if an error occurred", func() {
 				go func() {
 					defer GinkgoRecover()
-					_, err := strWithTimeout.Write([]byte("foobar"))
+					_, err := strWithTimeout.Write([]byte("barbar"))
 					Expect(err).To(MatchError(testErr))
 				}()
 				Eventually(func() []byte { return str.dataForWriting }).ShouldNot(BeNil())
@@ -949,7 +949,7 @@ var _ = Describe("Stream", func() {
 		mockFcm.EXPECT().UpdateHighestReceived(streamID, protocol.ByteCount(8)).Return(testErr)
 		frame := wire.StreamFrame{
 			Offset: 2,
-			Data:   []byte("foobar"),
+			Data:   []byte("barbar"),
 		}
 		err := str.AddStreamFrame(&frame)
 		Expect(err).To(MatchError(testErr))

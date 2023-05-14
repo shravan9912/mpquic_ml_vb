@@ -1,6 +1,6 @@
 package ackhandler
 
-import "github.com/shravan9912/mpquic_actor_critic_v1/internal/wire"
+import "github.com/shravan9912/mpquic_ml_vb/internal/wire"
 
 // Returns a new slice with all non-retransmittable frames deleted.
 func stripNonRetransmittableFrames(fs []wire.Frame) []wire.Frame {

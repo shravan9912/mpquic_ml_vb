@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/integrationtests/tools/proxy"
-	"github.com/shravan9912/mpquic_actor_critic_v1/integrationtests/tools/testserver"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/integrationtests/tools/proxy"
+	"github.com/shravan9912/mpquic_ml_vb/integrationtests/tools/testserver"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
 	_ "github.com/lucas-clemente/quic-clients" // download clients
 
 	. "github.com/onsi/ginkgo"

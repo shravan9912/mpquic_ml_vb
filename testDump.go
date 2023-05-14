@@ -58,8 +58,8 @@ func main() {
         elapsed := time.Since(start)
         fmt.Printf("Binomial took %s", elapsed) 
 	//os.Remove("/Users/hongjiawu/Documents/bitbuck/mosaic-classification-based-scheduling/MAaF")
-	os.Create("/home/shravan/Documents/dronenextwork/new/mpquic_ftp_actor_critic_v1/ool/lin/lin")
-	file2, _ := os.OpenFile("/home/shravan/Documents/dronenextwork/new/mpquic_ftp_actor_critic_v1/ool/lin/lin", os.O_WRONLY, 0600)
+	os.Create("/home/shravan/Documents/dronenextwork/new/mpquic_ml_vb/ool/lin/lin")
+	file2, _ := os.OpenFile("/home/shravan/Documents/dronenextwork/new/mpquic_ml_vb/ool/lin/lin", os.O_WRONLY, 0600)
 	for i := 0; i < banditDimension; i++ {
 		for j := 0; j < banditDimension; j++ {
 			if i == j{
@@ -86,7 +86,7 @@ func main() {
 		}
 	}
 	file2.Close()
-	file, err := os.Open("/home/shravan/Documents/dronenextwork/new/mpquic_ftp_actor_critic_v1/ool/lin/lin")
+	file, err := os.Open("/home/shravan/Documents/dronenextwork/new/mpquic_ml_vb/ool/lin/lin")
 	if err != nil {
     	panic(err)
 	}

@@ -4,7 +4,7 @@ import (
 	"crypto"
 	"errors"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
 	"github.com/bifurcation/mint"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -40,10 +40,10 @@ var _ = Describe("Key Derivation", func() {
 		Expect(err).ToNot(HaveOccurred())
 		serverAEAD, err := DeriveAESKeys(&mockMintController{hash: crypto.SHA256}, protocol.PerspectiveServer)
 		Expect(err).ToNot(HaveOccurred())
-		ciphertext := clientAEAD.Seal(nil, []byte("foobar"), 0, []byte("aad"))
+		ciphertext := clientAEAD.Seal(nil, []byte("barbar"), 0, []byte("aad"))
 		data, err := serverAEAD.Open(nil, ciphertext, 0, []byte("aad"))
 		Expect(err).ToNot(HaveOccurred())
-		Expect(data).To(Equal([]byte("foobar")))
+		Expect(data).To(Equal([]byte("barbar")))
 	})
 
 	It("fails when different hash functions are used", func() {
@@ -51,7 +51,7 @@ var _ = Describe("Key Derivation", func() {
 		Expect(err).ToNot(HaveOccurred())
 		serverAEAD, err := DeriveAESKeys(&mockMintController{hash: crypto.SHA512}, protocol.PerspectiveServer)
 		Expect(err).ToNot(HaveOccurred())
-		ciphertext := clientAEAD.Seal(nil, []byte("foobar"), 0, []byte("aad"))
+		ciphertext := clientAEAD.Seal(nil, []byte("barbar"), 0, []byte("aad"))
 		_, err = serverAEAD.Open(nil, ciphertext, 0, []byte("aad"))
 		Expect(err).To(MatchError("cipher: message authentication failed"))
 	})

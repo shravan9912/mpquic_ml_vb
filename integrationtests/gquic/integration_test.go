@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/integrationtests/tools/testserver"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/integrationtests/tools/testserver"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
 
 	_ "github.com/lucas-clemente/quic-clients" // download clients
 
@@ -45,7 +45,7 @@ var _ = Describe("Integration tests", func() {
 					"--quic-version="+strconv.Itoa(int(version)),
 					"--host=127.0.0.1",
 					"--port="+testserver.Port(),
-					"--body=foo",
+					"--body=bar",
 					"https://quic.clemente.io/echo",
 				)
 				session, err := Start(command, nil, GinkgoWriter)
@@ -53,7 +53,7 @@ var _ = Describe("Integration tests", func() {
 				defer session.Kill()
 				Eventually(session, 5).Should(Exit(0))
 				Expect(session.Out).To(Say(":status 200"))
-				Expect(session.Out).To(Say("body: foo\n"))
+				Expect(session.Out).To(Say("body: bar\n"))
 			})
 
 			It("gets a file", func() {

@@ -4,10 +4,10 @@ import (
 	"errors"
 	"time"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/congestion"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/handshake"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/utils"
+	"github.com/shravan9912/mpquic_ml_vb/congestion"
+	"github.com/shravan9912/mpquic_ml_vb/internal/handshake"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/internal/utils"
 )
 
 type flowController struct {

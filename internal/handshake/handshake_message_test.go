@@ -3,7 +3,7 @@ package handshake
 import (
 	"bytes"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/qerr"
+	"github.com/shravan9912/mpquic_ml_vb/qerr"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -48,12 +48,12 @@ var _ = Describe("Handshake Message", func() {
 			str := HandshakeMessage{
 				Tag: TagSHLO,
 				Data: map[Tag][]byte{
-					TagAEAD: []byte("foobar"),
+					TagAEAD: []byte("barbar"),
 					TagEXPY: []byte("raboof"),
 				},
 			}.String()
 			Expect(str[:4]).To(Equal("SHLO"))
-			Expect(str).To(ContainSubstring("AEAD: \"foobar\""))
+			Expect(str).To(ContainSubstring("AEAD: \"barbar\""))
 			Expect(str).To(ContainSubstring("EXPY: \"raboof\""))
 		})
 

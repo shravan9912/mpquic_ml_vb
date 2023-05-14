@@ -6,10 +6,10 @@ import (
 	"errors"
 	"net"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/crypto"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/utils"
-	"github.com/shravan9912/mpquic_actor_critic_v1/qerr"
+	"github.com/shravan9912/mpquic_ml_vb/internal/crypto"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/internal/utils"
+	"github.com/shravan9912/mpquic_ml_vb/qerr"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -274,7 +274,7 @@ var _ = Describe("Server Crypto Setup", func() {
 			HandshakeMessage{
 				Tag: TagCHLO,
 				Data: map[Tag][]byte{
-					TagFHL2: []byte("foobar"),
+					TagFHL2: []byte("barbar"),
 				},
 			}.Write(&stream.dataToRead)
 			err := cs.HandleCryptoStream()
@@ -285,7 +285,7 @@ var _ = Describe("Server Crypto Setup", func() {
 			HandshakeMessage{
 				Tag: TagCHLO,
 				Data: map[Tag][]byte{
-					TagNSTP: []byte("foobar"),
+					TagNSTP: []byte("barbar"),
 				},
 			}.Write(&stream.dataToRead)
 			err := cs.HandleCryptoStream()
@@ -317,7 +317,7 @@ var _ = Describe("Server Crypto Setup", func() {
 			sourceAddrValid = true
 			response, err := cs.handleInchoateCHLO("", bytes.Repeat([]byte{'a'}, protocol.ClientHelloMinimumSize), map[Tag][]byte{
 				TagSTK: validSTK,
-				TagSNI: []byte("foo"),
+				TagSNI: []byte("bar"),
 			})
 			Expect(err).ToNot(HaveOccurred())
 			Expect(response).To(HavePrefix("REJ"))
@@ -569,15 +569,15 @@ var _ = Describe("Server Crypto Setup", func() {
 			It("is used initially", func() {
 				enc, sealer := cs.GetSealer()
 				Expect(enc).To(Equal(protocol.EncryptionUnencrypted))
-				d := sealer.Seal(nil, []byte("foobar"), 0, []byte{})
-				Expect(d).To(Equal([]byte("foobar unencrypted")))
+				d := sealer.Seal(nil, []byte("barbar"), 0, []byte{})
+				Expect(d).To(Equal([]byte("barbar unencrypted")))
 			})
 
 			It("is used for crypto stream", func() {
 				enc, sealer := cs.GetSealerForCryptoStream()
 				Expect(enc).To(Equal(protocol.EncryptionUnencrypted))
-				d := sealer.Seal(nil, []byte("foobar"), 0, []byte{})
-				Expect(d).To(Equal([]byte("foobar unencrypted")))
+				d := sealer.Seal(nil, []byte("barbar"), 0, []byte{})
+				Expect(d).To(Equal([]byte("barbar unencrypted")))
 			})
 
 			It("is accepted initially", func() {
@@ -608,7 +608,7 @@ var _ = Describe("Server Crypto Setup", func() {
 				Expect(enc).To(Equal(protocol.EncryptionSecure))
 				Expect(err).ToNot(HaveOccurred())
 				Expect(d).To(Equal([]byte("decrypted")))
-				_, enc, err = cs.Open(nil, []byte("foobar unencrypted"), 0, []byte{})
+				_, enc, err = cs.Open(nil, []byte("barbar unencrypted"), 0, []byte{})
 				Expect(err).To(MatchError("authentication failed"))
 				Expect(enc).To(Equal(protocol.EncryptionUnspecified))
 			})
@@ -617,8 +617,8 @@ var _ = Describe("Server Crypto Setup", func() {
 				doCHLO()
 				enc, sealer := cs.GetSealer()
 				Expect(enc).ToNot(Equal(protocol.EncryptionUnencrypted))
-				d := sealer.Seal(nil, []byte("foobar"), 0, []byte{})
-				Expect(d).ToNot(Equal([]byte("foobar unencrypted")))
+				d := sealer.Seal(nil, []byte("barbar"), 0, []byte{})
+				Expect(d).ToNot(Equal([]byte("barbar unencrypted")))
 			})
 		})
 
@@ -644,8 +644,8 @@ var _ = Describe("Server Crypto Setup", func() {
 				doCHLO()
 				enc, sealer := cs.GetSealerForCryptoStream()
 				Expect(enc).To(Equal(protocol.EncryptionSecure))
-				d := sealer.Seal(nil, []byte("foobar"), 0, []byte{})
-				Expect(d).To(Equal([]byte("foobar  normal sec")))
+				d := sealer.Seal(nil, []byte("barbar"), 0, []byte{})
+				Expect(d).To(Equal([]byte("barbar  normal sec")))
 			})
 		})
 
@@ -654,8 +654,8 @@ var _ = Describe("Server Crypto Setup", func() {
 				doCHLO()
 				enc, sealer := cs.GetSealer()
 				Expect(enc).To(Equal(protocol.EncryptionForwardSecure))
-				d := sealer.Seal(nil, []byte("foobar"), 0, []byte{})
-				Expect(d).To(Equal([]byte("foobar forward sec")))
+				d := sealer.Seal(nil, []byte("barbar"), 0, []byte{})
+				Expect(d).To(Equal([]byte("barbar forward sec")))
 			})
 
 			It("regards the handshake as complete once it receives a forward encrypted packet", func() {
@@ -670,16 +670,16 @@ var _ = Describe("Server Crypto Setup", func() {
 			It("forces null encryption", func() {
 				sealer, err := cs.GetSealerWithEncryptionLevel(protocol.EncryptionUnencrypted)
 				Expect(err).ToNot(HaveOccurred())
-				d := sealer.Seal(nil, []byte("foobar"), 0, []byte{})
-				Expect(d).To(Equal([]byte("foobar unencrypted")))
+				d := sealer.Seal(nil, []byte("barbar"), 0, []byte{})
+				Expect(d).To(Equal([]byte("barbar unencrypted")))
 			})
 
 			It("forces initial encryption", func() {
 				doCHLO()
 				sealer, err := cs.GetSealerWithEncryptionLevel(protocol.EncryptionSecure)
 				Expect(err).ToNot(HaveOccurred())
-				d := sealer.Seal(nil, []byte("foobar"), 0, []byte{})
-				Expect(d).To(Equal([]byte("foobar  normal sec")))
+				d := sealer.Seal(nil, []byte("barbar"), 0, []byte{})
+				Expect(d).To(Equal([]byte("barbar  normal sec")))
 			})
 
 			It("errors if no AEAD for initial encryption is available", func() {
@@ -692,8 +692,8 @@ var _ = Describe("Server Crypto Setup", func() {
 				doCHLO()
 				sealer, err := cs.GetSealerWithEncryptionLevel(protocol.EncryptionForwardSecure)
 				Expect(err).ToNot(HaveOccurred())
-				d := sealer.Seal(nil, []byte("foobar"), 0, []byte{})
-				Expect(d).To(Equal([]byte("foobar forward sec")))
+				d := sealer.Seal(nil, []byte("barbar"), 0, []byte{})
+				Expect(d).To(Equal([]byte("barbar forward sec")))
 			})
 
 			It("errors of no AEAD for forward-secure encryption is available", func() {
@@ -716,7 +716,7 @@ var _ = Describe("Server Crypto Setup", func() {
 			done, err := cs.handleMessage(
 				bytes.Repeat([]byte{'a'}, protocol.ClientHelloMinimumSize),
 				map[Tag][]byte{
-					TagSNI: []byte("foo"),
+					TagSNI: []byte("bar"),
 					TagVER: versionTag,
 				},
 			)
@@ -730,7 +730,7 @@ var _ = Describe("Server Crypto Setup", func() {
 			done, err := cs.handleMessage(
 				bytes.Repeat([]byte{'a'}, protocol.ClientHelloMinimumSize),
 				map[Tag][]byte{
-					TagSNI: []byte("foo"),
+					TagSNI: []byte("bar"),
 					TagVER: versionTag,
 				},
 			)

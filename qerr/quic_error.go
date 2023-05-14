@@ -3,7 +3,7 @@ package qerr
 import (
 	"fmt"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/utils"
+	"github.com/shravan9912/mpquic_ml_vb/internal/utils"
 )
 
 // ErrorCode can be used as a normal error without reason.

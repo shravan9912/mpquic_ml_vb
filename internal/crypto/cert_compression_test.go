@@ -267,9 +267,9 @@ var _ = Describe("Cert compression and decompression", func() {
 	It("rejects invalid CCS / CCRT hashes", func() {
 		cert := []byte{0xde, 0xca, 0xfb, 0xad}
 		chain := [][]byte{cert}
-		_, err := compressChain(chain, []byte("foo"), nil)
+		_, err := compressChain(chain, []byte("bar"), nil)
 		Expect(err).To(MatchError("expected a multiple of 8 bytes for CCS / CCRT hashes"))
-		_, err = compressChain(chain, nil, []byte("foo"))
+		_, err = compressChain(chain, nil, []byte("bar"))
 		Expect(err).To(MatchError("expected a multiple of 8 bytes for CCS / CCRT hashes"))
 	})
 

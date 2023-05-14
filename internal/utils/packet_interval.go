@@ -1,6 +1,6 @@
 package utils
 
-import "github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
+import "github.com/shravan9912/mpquic_ml_vb/internal/protocol"
 
 // PacketInterval is an interval from one PacketNumber to the other
 // +gen linkedlist

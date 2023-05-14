@@ -3,8 +3,8 @@ package wire
 import (
 	"bytes"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
-	"github.com/shravan9912/mpquic_actor_critic_v1/qerr"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/qerr"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -26,7 +26,7 @@ var _ = Describe("StreamFrame", func() {
 				Expect(frame.StreamID).To(Equal(protocol.StreamID(1)))
 				Expect(frame.Offset).To(BeZero())
 				Expect(frame.DataLenPresent).To(BeTrue())
-				Expect(frame.Data).To(Equal([]byte("foobar")))
+				Expect(frame.Data).To(Equal([]byte("barbar")))
 				Expect(b.Len()).To(Equal(3))
 			})
 
@@ -43,7 +43,7 @@ var _ = Describe("StreamFrame", func() {
 				Expect(frame.StreamID).To(Equal(protocol.StreamID(1)))
 				Expect(frame.Offset).To(Equal(protocol.ByteCount(0x42)))
 				Expect(frame.DataLenPresent).To(BeTrue())
-				Expect(frame.Data).To(Equal([]byte("foobar")))
+				Expect(frame.Data).To(Equal([]byte("barbar")))
 				Expect(b.Len()).To(BeZero())
 			})
 
@@ -78,7 +78,7 @@ var _ = Describe("StreamFrame", func() {
 				Expect(frame.StreamID).To(Equal(protocol.StreamID(1)))
 				Expect(frame.Offset).To(BeZero())
 				Expect(frame.DataLenPresent).To(BeTrue())
-				Expect(frame.Data).To(Equal([]byte("foobar")))
+				Expect(frame.Data).To(Equal([]byte("barbar")))
 				Expect(b.Len()).To(Equal(3))
 			})
 
@@ -95,7 +95,7 @@ var _ = Describe("StreamFrame", func() {
 				Expect(frame.StreamID).To(Equal(protocol.StreamID(1)))
 				Expect(frame.Offset).To(Equal(protocol.ByteCount(0x42)))
 				Expect(frame.DataLenPresent).To(BeTrue())
-				Expect(frame.Data).To(Equal([]byte("foobar")))
+				Expect(frame.Data).To(Equal([]byte("barbar")))
 				Expect(b.Len()).To(BeZero())
 			})
 
@@ -126,7 +126,7 @@ var _ = Describe("StreamFrame", func() {
 			Expect(frame.StreamID).To(Equal(protocol.StreamID(1)))
 			Expect(frame.Offset).To(BeZero())
 			Expect(frame.DataLenPresent).To(BeFalse())
-			Expect(frame.Data).To(Equal([]byte("foobar")))
+			Expect(frame.Data).To(Equal([]byte("barbar")))
 			Expect(b.Len()).To(BeZero())
 		})
 
@@ -154,7 +154,7 @@ var _ = Describe("StreamFrame", func() {
 			Expect(err).ToNot(HaveOccurred())
 			Expect(frame.FinBit).To(BeTrue())
 			Expect(frame.DataLenPresent).To(BeFalse())
-			Expect(frame.Data).To(Equal([]byte("foobar")))
+			Expect(frame.Data).To(Equal([]byte("barbar")))
 			Expect(b.Len()).To(BeZero())
 		})
 
@@ -194,7 +194,7 @@ var _ = Describe("StreamFrame", func() {
 				b := &bytes.Buffer{}
 				err := (&StreamFrame{
 					StreamID:       1,
-					Data:           []byte("foobar"),
+					Data:           []byte("barbar"),
 					DataLenPresent: true,
 				}).Write(b, versionLittleEndian)
 				Expect(err).ToNot(HaveOccurred())
@@ -211,7 +211,7 @@ var _ = Describe("StreamFrame", func() {
 				b := &bytes.Buffer{}
 				err := (&StreamFrame{
 					StreamID:       1,
-					Data:           []byte("foobar"),
+					Data:           []byte("barbar"),
 					DataLenPresent: true,
 				}).Write(b, versionLittleEndian)
 				Expect(err).ToNot(HaveOccurred())
@@ -227,7 +227,7 @@ var _ = Describe("StreamFrame", func() {
 			b := &bytes.Buffer{}
 			err := (&StreamFrame{
 				StreamID: 1,
-				Data:     []byte("foobar"),
+				Data:     []byte("barbar"),
 				FinBit:   true,
 			}).Write(b, protocol.VersionWhatever)
 			Expect(err).ToNot(HaveOccurred())
@@ -327,7 +327,7 @@ var _ = Describe("StreamFrame", func() {
 			It("calculates the correcct min-length", func() {
 				f := &StreamFrame{
 					StreamID:       0xCAFE,
-					Data:           []byte("foobar"),
+					Data:           []byte("barbar"),
 					DataLenPresent: false,
 					Offset:         0xDEADBEEF,
 				}
@@ -343,7 +343,7 @@ var _ = Describe("StreamFrame", func() {
 					b := &bytes.Buffer{}
 					err := (&StreamFrame{
 						StreamID: 1,
-						Data:     []byte("foobar"),
+						Data:     []byte("barbar"),
 						Offset:   0,
 					}).Write(b, versionLittleEndian)
 					Expect(err).ToNot(HaveOccurred())
@@ -354,7 +354,7 @@ var _ = Describe("StreamFrame", func() {
 					b := &bytes.Buffer{}
 					err := (&StreamFrame{
 						StreamID: 1,
-						Data:     []byte("foobar"),
+						Data:     []byte("barbar"),
 						Offset:   0x1337,
 					}).Write(b, versionLittleEndian)
 					Expect(err).ToNot(HaveOccurred())
@@ -366,7 +366,7 @@ var _ = Describe("StreamFrame", func() {
 					b := &bytes.Buffer{}
 					(&StreamFrame{
 						StreamID: 1,
-						Data:     []byte("foobar"),
+						Data:     []byte("barbar"),
 						Offset:   0x13cafe,
 					}).Write(b, versionLittleEndian)
 					Expect(b.Bytes()[0] & 0x1c).To(Equal(uint8(0x2 << 2)))
@@ -377,7 +377,7 @@ var _ = Describe("StreamFrame", func() {
 					b := &bytes.Buffer{}
 					err := (&StreamFrame{
 						StreamID: 1,
-						Data:     []byte("foobar"),
+						Data:     []byte("barbar"),
 						Offset:   0xdeadbeef,
 					}).Write(b, versionLittleEndian)
 					Expect(err).ToNot(HaveOccurred())
@@ -389,7 +389,7 @@ var _ = Describe("StreamFrame", func() {
 					b := &bytes.Buffer{}
 					err := (&StreamFrame{
 						StreamID: 1,
-						Data:     []byte("foobar"),
+						Data:     []byte("barbar"),
 						Offset:   0x13deadbeef,
 					}).Write(b, versionLittleEndian)
 					Expect(err).ToNot(HaveOccurred())
@@ -401,7 +401,7 @@ var _ = Describe("StreamFrame", func() {
 					b := &bytes.Buffer{}
 					err := (&StreamFrame{
 						StreamID: 1,
-						Data:     []byte("foobar"),
+						Data:     []byte("barbar"),
 						Offset:   0xdeadbeefcafe,
 					}).Write(b, versionLittleEndian)
 					Expect(err).ToNot(HaveOccurred())
@@ -413,7 +413,7 @@ var _ = Describe("StreamFrame", func() {
 					b := &bytes.Buffer{}
 					err := (&StreamFrame{
 						StreamID: 1,
-						Data:     []byte("foobar"),
+						Data:     []byte("barbar"),
 						Offset:   0x13deadbeefcafe,
 					}).Write(b, versionLittleEndian)
 					Expect(err).ToNot(HaveOccurred())
@@ -425,7 +425,7 @@ var _ = Describe("StreamFrame", func() {
 					b := &bytes.Buffer{}
 					err := (&StreamFrame{
 						StreamID: 1,
-						Data:     []byte("foobar"),
+						Data:     []byte("barbar"),
 						Offset:   0x1337deadbeefcafe,
 					}).Write(b, versionLittleEndian)
 					Expect(err).ToNot(HaveOccurred())
@@ -439,7 +439,7 @@ var _ = Describe("StreamFrame", func() {
 					b := &bytes.Buffer{}
 					err := (&StreamFrame{
 						StreamID: 1,
-						Data:     []byte("foobar"),
+						Data:     []byte("barbar"),
 						Offset:   0,
 					}).Write(b, versionBigEndian)
 					Expect(err).ToNot(HaveOccurred())
@@ -450,7 +450,7 @@ var _ = Describe("StreamFrame", func() {
 					b := &bytes.Buffer{}
 					err := (&StreamFrame{
 						StreamID: 1,
-						Data:     []byte("foobar"),
+						Data:     []byte("barbar"),
 						Offset:   0x1337,
 					}).Write(b, versionBigEndian)
 					Expect(err).ToNot(HaveOccurred())
@@ -462,7 +462,7 @@ var _ = Describe("StreamFrame", func() {
 					b := &bytes.Buffer{}
 					(&StreamFrame{
 						StreamID: 1,
-						Data:     []byte("foobar"),
+						Data:     []byte("barbar"),
 						Offset:   0x13cafe,
 					}).Write(b, versionBigEndian)
 					Expect(b.Bytes()[0] & 0x1c).To(Equal(uint8(0x2 << 2)))
@@ -473,7 +473,7 @@ var _ = Describe("StreamFrame", func() {
 					b := &bytes.Buffer{}
 					err := (&StreamFrame{
 						StreamID: 1,
-						Data:     []byte("foobar"),
+						Data:     []byte("barbar"),
 						Offset:   0xdeadbeef,
 					}).Write(b, versionBigEndian)
 					Expect(err).ToNot(HaveOccurred())
@@ -485,7 +485,7 @@ var _ = Describe("StreamFrame", func() {
 					b := &bytes.Buffer{}
 					err := (&StreamFrame{
 						StreamID: 1,
-						Data:     []byte("foobar"),
+						Data:     []byte("barbar"),
 						Offset:   0x13deadbeef,
 					}).Write(b, versionBigEndian)
 					Expect(err).ToNot(HaveOccurred())
@@ -497,7 +497,7 @@ var _ = Describe("StreamFrame", func() {
 					b := &bytes.Buffer{}
 					err := (&StreamFrame{
 						StreamID: 1,
-						Data:     []byte("foobar"),
+						Data:     []byte("barbar"),
 						Offset:   0xdeadbeefcafe,
 					}).Write(b, versionBigEndian)
 					Expect(err).ToNot(HaveOccurred())
@@ -509,7 +509,7 @@ var _ = Describe("StreamFrame", func() {
 					b := &bytes.Buffer{}
 					err := (&StreamFrame{
 						StreamID: 1,
-						Data:     []byte("foobar"),
+						Data:     []byte("barbar"),
 						Offset:   0x13deadbeefcafe,
 					}).Write(b, versionBigEndian)
 					Expect(err).ToNot(HaveOccurred())
@@ -521,7 +521,7 @@ var _ = Describe("StreamFrame", func() {
 					b := &bytes.Buffer{}
 					err := (&StreamFrame{
 						StreamID: 1,
-						Data:     []byte("foobar"),
+						Data:     []byte("barbar"),
 						Offset:   0x1337deadbeefcafe,
 					}).Write(b, versionBigEndian)
 					Expect(err).ToNot(HaveOccurred())
@@ -537,7 +537,7 @@ var _ = Describe("StreamFrame", func() {
 					b := &bytes.Buffer{}
 					err := (&StreamFrame{
 						StreamID: 13,
-						Data:     []byte("foobar"),
+						Data:     []byte("barbar"),
 					}).Write(b, versionLittleEndian)
 					Expect(err).ToNot(HaveOccurred())
 					Expect(b.Bytes()[0] & 0x3).To(Equal(uint8(0x0)))
@@ -548,7 +548,7 @@ var _ = Describe("StreamFrame", func() {
 					b := &bytes.Buffer{}
 					err := (&StreamFrame{
 						StreamID: 0xcafe,
-						Data:     []byte("foobar"),
+						Data:     []byte("barbar"),
 					}).Write(b, versionLittleEndian)
 					Expect(err).ToNot(HaveOccurred())
 					Expect(b.Bytes()[0] & 0x3).To(Equal(uint8(0x1)))
@@ -559,7 +559,7 @@ var _ = Describe("StreamFrame", func() {
 					b := &bytes.Buffer{}
 					err := (&StreamFrame{
 						StreamID: 0x13beef,
-						Data:     []byte("foobar"),
+						Data:     []byte("barbar"),
 					}).Write(b, versionLittleEndian)
 					Expect(err).ToNot(HaveOccurred())
 					Expect(b.Bytes()[0] & 0x3).To(Equal(uint8(0x2)))
@@ -570,7 +570,7 @@ var _ = Describe("StreamFrame", func() {
 					b := &bytes.Buffer{}
 					err := (&StreamFrame{
 						StreamID: 0xdecafbad,
-						Data:     []byte("foobar"),
+						Data:     []byte("barbar"),
 					}).Write(b, versionLittleEndian)
 					Expect(err).ToNot(HaveOccurred())
 					Expect(b.Bytes()[0] & 0x3).To(Equal(uint8(0x3)))
@@ -581,7 +581,7 @@ var _ = Describe("StreamFrame", func() {
 					b := &bytes.Buffer{}
 					frame := &StreamFrame{
 						StreamID: 0xdecafbad,
-						Data:     []byte("foobar"),
+						Data:     []byte("barbar"),
 					}
 					frame.MinLength(0)
 					err := frame.Write(b, versionLittleEndian)
@@ -596,7 +596,7 @@ var _ = Describe("StreamFrame", func() {
 					b := &bytes.Buffer{}
 					err := (&StreamFrame{
 						StreamID: 13,
-						Data:     []byte("foobar"),
+						Data:     []byte("barbar"),
 					}).Write(b, versionBigEndian)
 					Expect(err).ToNot(HaveOccurred())
 					Expect(b.Bytes()[0] & 0x3).To(Equal(uint8(0x0)))
@@ -607,7 +607,7 @@ var _ = Describe("StreamFrame", func() {
 					b := &bytes.Buffer{}
 					err := (&StreamFrame{
 						StreamID: 0xcafe,
-						Data:     []byte("foobar"),
+						Data:     []byte("barbar"),
 					}).Write(b, versionBigEndian)
 					Expect(err).ToNot(HaveOccurred())
 					Expect(b.Bytes()[0] & 0x3).To(Equal(uint8(0x1)))
@@ -618,7 +618,7 @@ var _ = Describe("StreamFrame", func() {
 					b := &bytes.Buffer{}
 					err := (&StreamFrame{
 						StreamID: 0x13beef,
-						Data:     []byte("foobar"),
+						Data:     []byte("barbar"),
 					}).Write(b, versionBigEndian)
 					Expect(err).ToNot(HaveOccurred())
 					Expect(b.Bytes()[0] & 0x3).To(Equal(uint8(0x2)))
@@ -629,7 +629,7 @@ var _ = Describe("StreamFrame", func() {
 					b := &bytes.Buffer{}
 					err := (&StreamFrame{
 						StreamID: 0xdecafbad,
-						Data:     []byte("foobar"),
+						Data:     []byte("barbar"),
 					}).Write(b, versionBigEndian)
 					Expect(err).ToNot(HaveOccurred())
 					Expect(b.Bytes()[0] & 0x3).To(Equal(uint8(0x3)))
@@ -640,7 +640,7 @@ var _ = Describe("StreamFrame", func() {
 					b := &bytes.Buffer{}
 					frame := &StreamFrame{
 						StreamID: 0xdecafbad,
-						Data:     []byte("foobar"),
+						Data:     []byte("barbar"),
 					}
 					frame.MinLength(0)
 					err := frame.Write(b, versionBigEndian)
@@ -724,7 +724,7 @@ var _ = Describe("StreamFrame", func() {
 	Context("DataLen", func() {
 		It("determines the length of the data", func() {
 			frame := StreamFrame{
-				Data: []byte("foobar"),
+				Data: []byte("barbar"),
 			}
 			Expect(frame.DataLen()).To(Equal(protocol.ByteCount(6)))
 		})

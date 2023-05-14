@@ -12,9 +12,9 @@ import (
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/hpack"
 
-	quic "github.com/shravan9912/mpquic_actor_critic_v1"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
-	"github.com/shravan9912/mpquic_actor_critic_v1/qerr"
+	quic "github.com/shravan9912/mpquic_ml_vb"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/qerr"
 
 	"time"
 
@@ -253,14 +253,14 @@ var _ = Describe("Client", func() {
 
 		Context("validating the address", func() {
 			It("refuses to do requests for the wrong host", func() {
-				req, err := http.NewRequest("https", "https://quic.clemente.io:1336/foobar.html", nil)
+				req, err := http.NewRequest("https", "https://quic.clemente.io:1336/barbar.html", nil)
 				Expect(err).ToNot(HaveOccurred())
 				_, err = client.RoundTrip(req)
 				Expect(err).To(MatchError("h2quic Client BUG: RoundTrip called for the wrong client (expected quic.clemente.io:1337, got quic.clemente.io:1336)"))
 			})
 
 			It("refuses to do plain HTTP requests", func() {
-				req, err := http.NewRequest("https", "http://quic.clemente.io:1337/foobar.html", nil)
+				req, err := http.NewRequest("https", "http://quic.clemente.io:1337/barbar.html", nil)
 				Expect(err).ToNot(HaveOccurred())
 				_, err = client.RoundTrip(req)
 				Expect(err).To(MatchError("quic http2: unsupported scheme"))
@@ -269,7 +269,7 @@ var _ = Describe("Client", func() {
 			It("adds the port for request URLs without one", func(done Done) {
 				var err error
 				client = newClient("quic.clemente.io", nil, &roundTripperOpts{}, nil)
-				req, err := http.NewRequest("https", "https://quic.clemente.io/foobar.html", nil)
+				req, err := http.NewRequest("https", "https://quic.clemente.io/barbar.html", nil)
 				Expect(err).ToNot(HaveOccurred())
 
 				var doErr error
@@ -374,13 +374,13 @@ var _ = Describe("Client", func() {
 		})
 
 		Context("gzip compression", func() {
-			var gzippedData []byte // a gzipped foobar
+			var gzippedData []byte // a gzipped barbar
 			var response *http.Response
 
 			BeforeEach(func() {
 				var b bytes.Buffer
 				w := gzip.NewWriter(&b)
-				w.Write([]byte("foobar"))
+				w.Write([]byte("barbar"))
 				w.Close()
 				gzippedData = b.Bytes()
 				response = &http.Response{
@@ -409,7 +409,7 @@ var _ = Describe("Client", func() {
 				data := make([]byte, 6)
 				_, err := io.ReadFull(doRsp.Body, data)
 				Expect(err).ToNot(HaveOccurred())
-				Expect(data).To(Equal([]byte("foobar")))
+				Expect(data).To(Equal([]byte("barbar")))
 				close(done)
 			}, 2)
 

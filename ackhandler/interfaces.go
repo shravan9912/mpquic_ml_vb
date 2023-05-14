@@ -3,8 +3,8 @@ package ackhandler
 import (
 	"time"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/wire"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/internal/wire"
 )
 
 // SentPacketHandler handles ACKs received for outgoing packets

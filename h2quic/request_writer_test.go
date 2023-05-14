@@ -42,7 +42,7 @@ var _ = Describe("Request", func() {
 	}
 
 	It("writes a GET request", func() {
-		req, err := http.NewRequest("GET", "https://quic.clemente.io/index.html?foo=bar", nil)
+		req, err := http.NewRequest("GET", "https://quic.clemente.io/index.html?bar=bar", nil)
 		Expect(err).ToNot(HaveOccurred())
 		rw.WriteRequest(req, 1337, true, false)
 		headerFrame, headerFields := decode(headerStream.dataWritten.Bytes())
@@ -50,7 +50,7 @@ var _ = Describe("Request", func() {
 		Expect(headerFrame.HasPriority()).To(BeTrue())
 		Expect(headerFields).To(HaveKeyWithValue(":authority", "quic.clemente.io"))
 		Expect(headerFields).To(HaveKeyWithValue(":method", "GET"))
-		Expect(headerFields).To(HaveKeyWithValue(":path", "/index.html?foo=bar"))
+		Expect(headerFields).To(HaveKeyWithValue(":path", "/index.html?bar=bar"))
 		Expect(headerFields).To(HaveKeyWithValue(":scheme", "https"))
 		Expect(headerFields).ToNot(HaveKey("accept-encoding"))
 	})
@@ -72,7 +72,7 @@ var _ = Describe("Request", func() {
 	})
 
 	It("requests gzip compression, if requested", func() {
-		req, err := http.NewRequest("GET", "https://quic.clemente.io/index.html?foo=bar", nil)
+		req, err := http.NewRequest("GET", "https://quic.clemente.io/index.html?bar=bar", nil)
 		Expect(err).ToNot(HaveOccurred())
 		rw.WriteRequest(req, 1337, true, true)
 		_, headerFields := decode(headerStream.dataWritten.Bytes())
@@ -81,7 +81,7 @@ var _ = Describe("Request", func() {
 
 	It("writes a POST request", func() {
 		form := url.Values{}
-		form.Add("foo", "bar")
+		form.Add("bar", "bar")
 		req, err := http.NewRequest("POST", "https://quic.clemente.io/upload.html", strings.NewReader(form.Encode()))
 		Expect(err).ToNot(HaveOccurred())
 		rw.WriteRequest(req, 5, true, false)

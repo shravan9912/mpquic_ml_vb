@@ -1,6 +1,6 @@
 package handshake
 
-import "github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
+import "github.com/shravan9912/mpquic_ml_vb/internal/protocol"
 
 // Sealer seals a packet
 type Sealer interface {

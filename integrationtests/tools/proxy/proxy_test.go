@@ -9,8 +9,8 @@ import (
 
 	"fmt"
 
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/protocol"
-	"github.com/shravan9912/mpquic_actor_critic_v1/internal/wire"
+	"github.com/shravan9912/mpquic_ml_vb/internal/protocol"
+	"github.com/shravan9912/mpquic_ml_vb/internal/wire"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -145,7 +145,7 @@ var _ = Describe("QUIC Proxy", func() {
 			It("relays packets from the client to the server", func() {
 				startProxy(&Opts{RemoteAddr: serverConn.LocalAddr().String()})
 				// send the first packet
-				_, err := clientConn.Write(makePacket(1, []byte("foobar")))
+				_, err := clientConn.Write(makePacket(1, []byte("barbar")))
 				Expect(err).ToNot(HaveOccurred())
 
 				Eventually(getClientDict).Should(HaveLen(1))
@@ -160,14 +160,14 @@ var _ = Describe("QUIC Proxy", func() {
 
 				Eventually(serverReceivedPackets).Should(HaveLen(2))
 				Expect(getClientDict()).To(HaveLen(1))
-				Expect(string(<-serverReceivedPackets)).To(ContainSubstring("foobar"))
+				Expect(string(<-serverReceivedPackets)).To(ContainSubstring("barbar"))
 				Expect(string(<-serverReceivedPackets)).To(ContainSubstring("decafbad"))
 			})
 
 			It("relays packets from the server to the client", func() {
 				startProxy(&Opts{RemoteAddr: serverConn.LocalAddr().String()})
 				// send the first packet
-				_, err := clientConn.Write(makePacket(1, []byte("foobar")))
+				_, err := clientConn.Write(makePacket(1, []byte("barbar")))
 				Expect(err).ToNot(HaveOccurred())
 
 				Eventually(getClientDict).Should(HaveLen(1))
@@ -205,7 +205,7 @@ var _ = Describe("QUIC Proxy", func() {
 				Eventually(serverReceivedPackets).Should(HaveLen(2))
 				Expect(atomic.LoadInt32(&serverNumPacketsSent)).To(BeEquivalentTo(2))
 				Eventually(clientReceivedPackets).Should(HaveLen(2))
-				Expect(string(<-clientReceivedPackets)).To(ContainSubstring("foobar"))
+				Expect(string(<-clientReceivedPackets)).To(ContainSubstring("barbar"))
 				Expect(string(<-clientReceivedPackets)).To(ContainSubstring("decafbad"))
 			})
 		})
@@ -221,7 +221,7 @@ var _ = Describe("QUIC Proxy", func() {
 				startProxy(opts)
 
 				for i := 1; i <= 6; i++ {
-					_, err := clientConn.Write(makePacket(protocol.PacketNumber(i), []byte("foobar"+strconv.Itoa(i))))
+					_, err := clientConn.Write(makePacket(protocol.PacketNumber(i), []byte("barbar"+strconv.Itoa(i))))
 					Expect(err).ToNot(HaveOccurred())
 				}
 				Eventually(serverReceivedPackets).Should(HaveLen(3))
@@ -254,7 +254,7 @@ var _ = Describe("QUIC Proxy", func() {
 				}()
 
 				for i := 1; i <= numPackets; i++ {
-					_, err := clientConn.Write(makePacket(protocol.PacketNumber(i), []byte("foobar"+strconv.Itoa(i))))
+					_, err := clientConn.Write(makePacket(protocol.PacketNumber(i), []byte("barbar"+strconv.Itoa(i))))
 					Expect(err).ToNot(HaveOccurred())
 				}
 
@@ -291,7 +291,7 @@ var _ = Describe("QUIC Proxy", func() {
 				// send 3 packets
 				start := time.Now()
 				for i := 1; i <= 3; i++ {
-					_, err := clientConn.Write(makePacket(protocol.PacketNumber(i), []byte("foobar"+strconv.Itoa(i))))
+					_, err := clientConn.Write(makePacket(protocol.PacketNumber(i), []byte("barbar"+strconv.Itoa(i))))
 					Expect(err).ToNot(HaveOccurred())
 				}
 				Eventually(serverReceivedPackets).Should(HaveLen(1))
@@ -336,7 +336,7 @@ var _ = Describe("QUIC Proxy", func() {
 
 				start := time.Now()
 				for i := 1; i <= numPackets; i++ {
-					_, err := clientConn.Write(makePacket(protocol.PacketNumber(i), []byte("foobar"+strconv.Itoa(i))))
+					_, err := clientConn.Write(makePacket(protocol.PacketNumber(i), []byte("barbar"+strconv.Itoa(i))))
 					Expect(err).ToNot(HaveOccurred())
 				}
 				// the packets should have arrived immediately at the server
