@@ -1,6 +1,6 @@
 module github.com/shravan9912/mpquic_ml_vb
 
-go 1.17
+go 1.20
 
 require (
 	github.com/Workiva/go-datastructures v1.0.53
