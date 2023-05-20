@@ -73,12 +73,6 @@ type scheduler struct {
 	featureseven [50000]float64
 	// Retrans cache
 	retrans map[protocol.PathID]uint64
-
-	// Write experiences
-	DumpExp          bool
-	DumpPath         string
-	dumpAgent        experienceAgent
-        dumpDetection    detectionAgent
         
 
 	// Communicate with external change detection and NN training
@@ -1882,66 +1876,9 @@ func (sch *scheduler) performPacketSending(s *session, windowUpdateFrames []*wir
 
 	sRTT := make(map[protocol.PathID]time.Duration)
        // Dump and change detection
-        // Dump data
-        for pathID, pth := range s.paths {
-            if pathID == protocol.PathID(1){
-                DumpRTT := pth.rttStats.LatestRTT()
-                TransDumpRTT := float64(DumpRTT.Nanoseconds()) / float64(time.Millisecond.Nanoseconds())
-                if TransDumpRTT > 0 {
-                    sch.dumpDetection.AddStep(TransDumpRTT)
-                    sch.DumpDataCounter += 1
-                }
-            }
-        }
 
-       if sch.SchedulerName == "double" {
-            if sch.ReTrainingPacketCounter > RetrainingPacketNum {
-                sch.SchedulerName = "deploy"
-            } else {
-            sch.ReTrainingPacketCounter  += 1  
-            }         
-        }
-        // Change detection
-        if (sch.DumpDataCounter == DumpDataInterval){
-            sch.DumpDataCounter = 0
-            sch.DumpDataNum += 1
-            sch.dumpDetection.CloseExperience(sch.DumpDataNum,DetectAgentPath)
-            sch.dumpDetection.Clear()
-            fileDump, _ := os.OpenFile(DumpDataFile, os.O_WRONLY, 0600)
-            fmt.Fprintf(fileDump, "%d", sch.DumpDataNum)
-            fileDump.Close()
-        }
-        sch.CheckNotificationCounter += 1
-        if (sch.CheckNotificationCounter == CheckNotificationInterval){
-            sch.CheckNotificationCounter = 0
-            fileNoti, _ := os.Open(CheckNotificationFile)
-            fmt.Fscanln(fileNoti, &sch.CheckNotificationNum)
-            fileNoti.Close()
-            if sch.CheckNotificationNum == 1{
-                // Roger that
-                fileCheck, _ := os.OpenFile(CheckNotificationFile, os.O_WRONLY, 0600)
-                fmt.Fprintf(fileCheck, "%d", 0)
-                fileCheck.Close()
-                // Retraining
-                if sch.SchedulerName == "double" || sch.SchedulerName == "deploy"{
-                    for i := 0; i < banditDimension; i++ {
-		        for j := 0; j < banditDimension; j++ {
-			    if i == j{
-				    sch.MAaF[i][j] = 1
-                                    sch.MAaS[i][j] = 1
-			    } else {
-				    sch.MAaF[i][j] = 0
-                                    sch.MAaS[i][j] = 0
-			    }
-		        }
-                        sch.MbaF[i] = 0
-                        sch.MbaS[i] = 0
-	            }
-                    sch.SchedulerName = "double"
-                    sch.ReTrainingPacketCounter  = 0
-                }
-            }
-        }
+       
+
 	// Provide some logging if it is the last packet
 	for _, frame := range packet.frames {
 		switch frame := frame.(type) {
@@ -1974,11 +1911,7 @@ func (sch *scheduler) performPacketSending(s *session, windowUpdateFrames []*wir
 					}
 					sch.TrainingAgent.CloseEpisode(uint64(s.connectionID), RewardFinalGoodput(sch, s, duration, maxRTT), false)
 				}
-				utils.Infof("Dump: %t, Training:%t, scheduler:%s", sch.DumpExp, sch.Training, sch.SchedulerName)
-				if sch.DumpExp && !sch.Training && sch.SchedulerName == "dqnAgent" {
-					utils.Infof("Closing episode %d", uint64(s.connectionID))
-					sch.dumpAgent.CloseExperience(uint64(s.connectionID))
-				}
+				
 				s.pathsLock.RUnlock()
 				//Write lin parameters
 				os.Remove(sch.projectHomeDir + "/sch_out/lin")
@@ -2289,7 +2222,7 @@ func PrintSchedulerInfo(config *Config) {
 	// Scheduler Info
 	schedulerList := []string{constants.SCHEDULER_ROUND_ROBIN, constants.SCHEDULER_SCH_SHRAVAN, constants.SCHEDULER_LOW_LATENCY,
 		constants.SCHEDULER_PEEKABOO, constants.SCHEDULER_ECF, constants.SCHEDULER_DQNA, constants.SCHEDULER_BLEST,
-		constants.SCHEDULER_FIRST_PATH, constants.SCHEDULER_LOW_BANDIT, constants.SCHEDULER_RANDOM,constants.SCHEDULER_REDUNDANT, constants.SCHEDULER_ACTOR_CRITIC,constants.SCHEDULER_DOUBLE_BANDIT,constants.SCHEDULER_DEPLOY_BANDIT,constants.SCHEDULER_NEURAL_NET,constants.SCHEDULER_ROUND,constants.SCHEDULER_FULLLIN}
+		constants.SCHEDULER_FIRST_PATH, constants.SCHEDULER_LOW_BANDIT, constants.SCHEDULER_RANDOM,constants.SCHEDULER_REDUNDANT, constants.SCHEDULER_ACTOR_CRITIC,constants.SCHEDULER_DEPLOY_BANDIT,constants.SCHEDULER_NEURAL_NET,constants.SCHEDULER_ROUND}
 	if config.Scheduler == "" {
 		fmt.Println("Using Default Multipath Scheduler: ", constants.SCHEDULER_ROUND_ROBIN)
 	} else if util.StringInSlice(schedulerList, config.Scheduler) {

@@ -213,7 +213,7 @@ func (s *session) setup(
 		SchedulerName:      s.config.Scheduler,
 		Training:           s.config.Training,
 		AllowedCongestion:  s.config.AllowedCongestion,
-		DumpExp:            s.config.DumpExperiences,
+		//DumpExp:            s.config.DumpExperiences,
 		OnlineTrainingFile: s.config.OnlineTrainingFile,
 		ModelOutputDir:     s.config.ModelOutputDir,
 	}

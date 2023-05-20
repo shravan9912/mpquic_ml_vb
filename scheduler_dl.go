@@ -2,7 +2,7 @@ package quic
 
 import (
 	"errors"
-	"fmt"
+	
 	"io/ioutil"
 	"time"
 
@@ -222,9 +222,7 @@ func GetStateAndReward(sch *scheduler, s *session) (int, []*path) {
 			realaction := sch.actionvector[sch.record]
 			sch.TrainingAgent.SaveStep(uint64(s.connectionID), partialReward, realstate, realaction)
 		} else {
-			if sch.DumpExp {
-				sch.dumpAgent.AddStep(uint64(s.connectionID), []string{fmt.Sprint(sch.statevector[sch.record]), fmt.Sprint(sch.actionvector[sch.record])})
-			}
+			
 		}
 	} else {
 		elapsedtime = types.Output(time.Since(sch.lastfiretime))
@@ -243,9 +241,7 @@ func GetStateAndReward(sch *scheduler, s *session) (int, []*path) {
 						realaction := sch.actionvector[sch.episoderecord]
 						sch.TrainingAgent.SaveStep(uint64(s.connectionID), partialReward, realstate, realaction)
 					} else {
-						if sch.DumpExp {
-							sch.dumpAgent.AddStep(uint64(s.connectionID), []string{fmt.Sprint(sch.statevector[sch.episoderecord]), fmt.Sprint(sch.actionvector[sch.episoderecord])})
-						}
+						
 					}
 					sch.episoderecord += 1
 					break
@@ -257,9 +253,7 @@ func GetStateAndReward(sch *scheduler, s *session) (int, []*path) {
 						realaction := sch.actionvector[sch.episoderecord]
 						sch.TrainingAgent.SaveStep(uint64(s.connectionID), partialReward, realstate, realaction)
 					} else {
-						if sch.DumpExp {
-							sch.dumpAgent.AddStep(uint64(s.connectionID), []string{fmt.Sprint(sch.statevector[sch.episoderecord]), fmt.Sprint(sch.actionvector[sch.episoderecord])})
-						}
+						
 					}
 					sch.episoderecord += 1
 				}
